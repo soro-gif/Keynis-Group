@@ -1,0 +1,205 @@
+# Query: whatsapp
+# ContextLines: 1
+
+68 results - 23 files
+
+keynis-platform\app\Http\Controllers\AssetController.php:
+  46              'owner_phone' => ['required', 'string', 'max:50'],
+  47:             'owner_whatsapp' => ['nullable', 'string', 'max:50'],
+  48              'owner_email' => ['nullable', 'email', 'max:255'],
+
+keynis-platform\app\Http\Controllers\PartnerController.php:
+  30              'phone' => ['required', 'string', 'max:50'],
+  31:             'whatsapp' => ['nullable', 'string', 'max:50'],
+  32              'email' => ['required', 'email', 'max:255'],
+
+keynis-platform\app\Http\Controllers\RfqController.php:
+  27              'phone' => ['required', 'string', 'max:50'],
+  28:             'whatsapp' => ['nullable', 'string', 'max:50'],
+  29              'email' => ['required', 'email', 'max:255'],
+
+keynis-platform\app\Http\Controllers\Admin\AssetController.php:
+  45              'owner_phone' => ['required', 'string', 'max:50'],
+  46:             'owner_whatsapp' => ['nullable', 'string', 'max:50'],
+  47              'owner_email' => ['nullable', 'email', 'max:255'],
+
+  97              'owner_phone' => ['sometimes', 'string', 'max:50'],
+  98:             'owner_whatsapp' => ['sometimes', 'nullable', 'string', 'max:50'],
+  99              'owner_email' => ['sometimes', 'nullable', 'email', 'max:255'],
+
+keynis-platform\app\Http\Controllers\Admin\PartnerController.php:
+  42              'phone' => ['required', 'string', 'max:50'],
+  43:             'whatsapp' => ['nullable', 'string', 'max:50'],
+  44              'email' => ['required', 'email', 'max:255'],
+
+  86              'phone' => ['sometimes', 'string', 'max:50'],
+  87:             'whatsapp' => ['sometimes', 'nullable', 'string', 'max:50'],
+  88              'email' => ['sometimes', 'email', 'max:255'],
+
+keynis-platform\app\Http\Controllers\Admin\RfqController.php:
+  50              'phone' => ['sometimes', 'string', 'max:50'],
+  51:             'whatsapp' => ['sometimes', 'nullable', 'string', 'max:50'],
+  52              'email' => ['sometimes', 'email', 'max:255'],
+
+keynis-platform\app\Models\Asset.php:
+  15          'owner_phone',
+  16:         'owner_whatsapp',
+  17          'owner_email',
+
+keynis-platform\app\Models\Partner.php:
+  16          'phone',
+  17:         'whatsapp',
+  18          'email',
+
+keynis-platform\app\Models\Rfq.php:
+  15          'phone',
+  16:         'whatsapp',
+  17          'email',
+
+keynis-platform\database\migrations\2026_08_24_135845_create_assets_table.php:
+  20              $table->string('owner_phone');
+  21:             $table->string('owner_whatsapp')->nullable();
+  22              $table->string('owner_email')->nullable();
+
+keynis-platform\database\migrations\2026_08_24_135846_create_partners_table.php:
+  32              $table->string('phone');
+  33:             $table->string('whatsapp')->nullable();
+  34              $table->string('email');
+
+keynis-platform\database\migrations\2026_08_24_135847_create_rfqs_table.php:
+  21              $table->string('phone');
+  22:             $table->string('whatsapp')->nullable();
+  23              $table->string('email');
+
+keynis-platform\database\seeders\PartnerSeeder.php:
+   19                  'phone' => '+225 07 20 21 22 23',
+   20:                 'whatsapp' => '+225 07 20 21 22 23',
+   21                  'email' => 'contact@fermediomande.ci',
+
+   34                  'phone' => '+225 05 21 22 23 24',
+   35:                 'whatsapp' => '+225 05 21 22 23 24',
+   36                  'email' => 'coop.soubre@cacaoci.org',
+
+   49                  'phone' => '+225 01 22 23 24 25',
+   50:                 'whatsapp' => '+225 01 22 23 24 25',
+   51                  'email' => 'contact@ivoireplastiques.ci',
+
+   64                  'phone' => '+223 76 23 24 25 26',
+   65:                 'whatsapp' => '+223 76 23 24 25 26',
+   66                  'email' => 'a.toure@sahelimportexport.com',
+
+   79                  'phone' => '+225 07 24 25 26 27',
+   80:                 'whatsapp' => '+225 07 24 25 26 27',
+   81                  'email' => 'stocks@anacardedunord.ci',
+
+   94                  'phone' => '+225 05 25 26 27 28',
+   95:                 'whatsapp' => '+225 05 25 26 27 28',
+   96                  'email' => 'lassina.kone@konelocation.ci',
+
+  109                  'phone' => '+225 01 26 27 28 29',
+  110:                 'whatsapp' => '+225 01 26 27 28 29',
+  111                  'email' => 'operations@transabidjan.ci',
+
+  124                  'phone' => '+225 07 27 28 29 30',
+  125:                 'whatsapp' => '+225 07 27 28 29 30',
+  126                  'email' => 'n.ehouman@ggtransit.ci',
+
+  139                  'phone' => '+225 05 28 29 30 31',
+  140:                 'whatsapp' => '+225 05 28 29 30 31',
+  141                  'email' => 'contact@warehousesolutions.ci',
+
+  154                  'phone' => '+221 77 29 30 31 32',
+  155:                 'whatsapp' => '+221 77 29 30 31 32',
+  156                  'email' => 'o.barry@distriouestafrique.sn',
+
+  173                      'phone' => $item['phone'],
+  174:                     'whatsapp' => $item['whatsapp'],
+  175                      'email' => $item['email'],
+
+keynis-platform\resources\js\Layouts\SiteLayout.jsx:
+   24  
+   25: const WHATSAPP_NUMBER = '+2250715258988';
+   26  
+
+  181              <a
+  182:                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
+  183                  target="_blank"
+
+  185                  className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105"
+  186:                 aria-label="Contacter Keynis sur WhatsApp"
+  187              >
+
+keynis-platform\resources\js\Pages\Admin\Assets\Form.jsx:
+   23          owner_phone: asset?.owner_phone ?? '',
+   24:         owner_whatsapp: asset?.owner_whatsapp ?? '',
+   25          owner_email: asset?.owner_email ?? '',
+
+  114                      </Field>
+  115:                     <Field label="WhatsApp" error={errors.owner_whatsapp}>
+  116:                         <input value={data.owner_whatsapp} onChange={(e) => setData('owner_whatsapp', e.target.value)} className="input" />
+  117                      </Field>
+
+keynis-platform\resources\js\Pages\Admin\Assets\Show.jsx:
+  73                          <Row label="Téléphone" value={asset.owner_phone} />
+  74:                         <Row label="WhatsApp" value={asset.owner_whatsapp} />
+  75                          <Row label="E-mail" value={asset.owner_email} />
+
+keynis-platform\resources\js\Pages\Admin\Partners\Form.jsx:
+  28          phone: partner?.phone ?? '',
+  29:         whatsapp: partner?.whatsapp ?? '',
+  30          email: partner?.email ?? '',
+
+  92                      </Field>
+  93:                     <Field label="WhatsApp" error={errors.whatsapp}>
+  94:                         <input value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} className="input" />
+  95                      </Field>
+
+keynis-platform\resources\js\Pages\Admin\Partners\Show.jsx:
+  72                          <Row label="Téléphone" value={partner.phone} />
+  73:                         <Row label="WhatsApp" value={partner.whatsapp} />
+  74                          <Row label="E-mail" value={partner.email} />
+
+keynis-platform\resources\js\Pages\Admin\Rfqs\Form.jsx:
+  23          phone: rfq.phone,
+  24:         whatsapp: rfq.whatsapp ?? '',
+  25          email: rfq.email,
+
+  54                      </Field>
+  55:                     <Field label="WhatsApp" error={errors.whatsapp}>
+  56:                         <input value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} className="input" />
+  57                      </Field>
+
+keynis-platform\resources\js\Pages\Admin\Rfqs\Show.jsx:
+  59                          <Field label="Téléphone" value={rfq.phone} />
+  60:                         <Field label="WhatsApp" value={rfq.whatsapp} />
+  61                          <Field label="E-mail" value={rfq.email} />
+
+keynis-platform\resources\js\Pages\Assets\Index.jsx:
+  137          owner_phone: '',
+  138:         owner_whatsapp: '',
+  139          owner_email: '',
+
+  216                  </Field>
+  217:                 <Field label="WhatsApp" error={errors.owner_whatsapp}>
+  218:                     <input value={data.owner_whatsapp} onChange={(e) => setData('owner_whatsapp', e.target.value)} className="input" />
+  219                  </Field>
+
+keynis-platform\resources\js\Pages\Partners\Index.jsx:
+   76          phone: '',
+   77:         whatsapp: '',
+   78          email: '',
+
+  127                  </Field>
+  128:                 <Field label="WhatsApp" error={errors.whatsapp}>
+  129:                     <input value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} className="input" />
+  130                  </Field>
+
+keynis-platform\resources\js\Pages\Rfq\Create.jsx:
+   52          phone: '',
+   53:         whatsapp: '',
+   54          email: '',
+
+  128                          </Field>
+  129:                         <Field label="WhatsApp" error={errors.whatsapp}>
+  130:                             <input value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} className="input" />
+  131                          </Field>
