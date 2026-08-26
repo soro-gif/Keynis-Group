@@ -1,0 +1,53 @@
+databases:
+  - name: keynis-db
+    databaseName: keynis
+    user: keynis
+    plan: free
+
+services:
+  - type: web
+    name: keynis-group
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: "Keynis Trading & Logistics Group"
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true      # remplace par une vraie clé `base64:...`
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://keynis-group.onrender.com
+      - key: APP_LOCALE
+        value: fr
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: debug
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: PHP_CLI_SERVER_WORKERS
+        value: "4"
+
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase: { name: keynis-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: keynis-db, property: port }
+      - key: DB_DATABASE
+        fromDatabase: { name: keynis-db, property: database }
+      - key: DB_USERNAME
+        fromDatabase: { name: keynis-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: keynis-db, property: password }
+      - key: DB_SSLMODE
+        value: require
