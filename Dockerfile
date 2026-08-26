@@ -8,8 +8,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    nodejs \
-    npm \
+    libicu-dev \
     && docker-php-ext-install \
     pdo \
     pdo_mysql \
@@ -17,17 +16,31 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     zip \
     exif \
-    pcntl
+    pcntl \
+    intl \
+    dom \
+    xml
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Node.js 22 pour Vite
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs
 
 WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Installer Composer sans exécuter artisan pendant le build
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --prefer-dist \
+    --no-scripts
 
-RUN npm ci && npm run build
+RUN npm ci
+RUN npm run build
 
 RUN mkdir -p \
     storage/framework/cache \
@@ -40,4 +53,5 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+CMD php artisan package:discover --ansi \
+    && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
