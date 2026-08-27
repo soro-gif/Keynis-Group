@@ -20,17 +20,17 @@ class ResetAdminPassword extends Command
         $email = $this->option('email');
         $password = $this->option('password') ?: Str::random(16);
 
-        $user = User::updateOrCreate(
-            ['email' => $email],
-            [
-                'name' => 'Admin Keynis',
-                'role' => 'super_admin',
-                'password' => Hash::make($password),
-                'email_verified_at' => now(),
-            ]
-        );
+        $user = User::firstOrNew(['email' => $email]);
+        $wasRecentlyCreated = ! $user->exists;
 
-        $this->info(($user->wasRecentlyCreated ? 'Created' : 'Reset password for').": {$email}");
+        $user->forceFill([
+            'name' => $user->name ?? 'Admin Keynis',
+            'role' => 'super_admin',
+            'password' => Hash::make($password),
+            'email_verified_at' => $user->email_verified_at ?? now(),
+        ])->save();
+
+        $this->info(($wasRecentlyCreated ? 'Created' : 'Reset password for').": {$email}");
 
         if (! $this->option('password')) {
             $this->warn("Generated password: {$password}");

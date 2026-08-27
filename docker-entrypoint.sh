@@ -29,8 +29,9 @@ chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 # 4. Purger les caches hérités de l'image avant de recacher avec les
 #    vraies variables d'environnement Render.
+#    (cache:clear est reporté après les migrations : avec CACHE_STORE=database,
+#    la table "cache" n'existe pas encore avant le premier `migrate`.)
 php artisan config:clear || true
-php artisan cache:clear || true
 
 php artisan package:discover --ansi
 
@@ -38,6 +39,8 @@ php artisan package:discover --ansi
 #    n'existent pas encore au premier démarrage.
 echo "==> Migrations"
 php artisan migrate --force --no-interaction
+
+php artisan cache:clear || true
 
 # 6. Seed optionnel : mets RUN_SEEDERS=true dans Render pour peupler la base.
 if [ "${RUN_SEEDERS}" = "true" ]; then

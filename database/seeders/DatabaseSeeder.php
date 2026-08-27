@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
         if (! User::where('email', $adminEmail)->exists()) {
             $adminPassword = Str::random(16);
 
-            User::factory()->create([
+            User::forceCreate([
                 'name' => 'Admin Keynis',
                 'email' => $adminEmail,
+                'email_verified_at' => now(),
                 'role' => 'super_admin',
                 'password' => Hash::make($adminPassword),
             ]);
