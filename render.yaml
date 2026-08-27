@@ -17,7 +17,8 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        generateValue: true      # remplace par une vraie clé `base64:...`
+        sync: false      # `generateValue` produit une chaîne invalide pour Laravel (pas au format
+                          # base64:<32 octets>) -> à définir manuellement dans le dashboard Render
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
@@ -38,6 +39,9 @@ services:
         value: "4"
       - key: RUN_SEEDERS
         value: "true"
+      - key: ADMIN_PASSWORD
+        sync: false      # optionnel : si défini, (ré)initialise le mot de passe de
+                          # admin@keynisgroup.ci à chaque déploiement (utile sans accès Shell)
 
       - key: DB_CONNECTION
         value: pgsql
