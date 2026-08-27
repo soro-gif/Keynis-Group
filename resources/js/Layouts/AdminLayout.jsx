@@ -5,6 +5,7 @@ const nav = [
     { label: 'Tableau de bord', href: '/admin' },
     { label: 'Demandes (RFQ)', href: '/admin/rfqs' },
     { label: 'Produits', href: '/admin/produits' },
+    { label: 'Catégories produits', href: '/admin/categories-produits' },
     { label: 'Actifs', href: '/admin/actifs' },
     { label: 'Partenaires', href: '/admin/partenaires' },
     { label: 'Messages', href: '/admin/messages' },
