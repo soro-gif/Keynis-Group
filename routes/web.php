@@ -57,5 +57,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/sitemap.xml', function () {
+    return response()->view('sitemap')
+        ->header('Content-Type', 'application/xml');
+});
+
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
