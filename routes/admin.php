@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RfqController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,13 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/rfqs/{rfq}/edit', [RfqController::class, 'edit'])->name('rfqs.edit');
     Route::patch('/rfqs/{rfq}', [RfqController::class, 'update'])->name('rfqs.update');
     Route::delete('/rfqs/{rfq}', [RfqController::class, 'destroy'])->name('rfqs.destroy');
+
+    Route::get('/categories-produits', [ProductCategoryController::class, 'index'])->name('product-categories.index');
+    Route::get('/categories-produits/create', [ProductCategoryController::class, 'create'])->name('product-categories.create');
+    Route::post('/categories-produits', [ProductCategoryController::class, 'store'])->name('product-categories.store');
+    Route::get('/categories-produits/{productCategory}/edit', [ProductCategoryController::class, 'edit'])->name('product-categories.edit');
+    Route::put('/categories-produits/{productCategory}', [ProductCategoryController::class, 'update'])->name('product-categories.update');
+    Route::delete('/categories-produits/{productCategory}', [ProductCategoryController::class, 'destroy'])->name('product-categories.destroy');
 
     Route::get('/produits', [ProductController::class, 'index'])->name('products.index');
     Route::get('/produits/create', [ProductController::class, 'create'])->name('products.create');

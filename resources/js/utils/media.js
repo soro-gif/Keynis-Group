@@ -1,5 +1,7 @@
+const MEDIA_BASE_URL = (typeof window !== 'undefined' && window.mediaBaseUrl) || '/storage';
+
 export function mediaUrl(path) {
-    return path ? `/storage/${path}` : null;
+    return path ? `${MEDIA_BASE_URL}/${path}` : null;
 }
 
 export function firstImage(images) {

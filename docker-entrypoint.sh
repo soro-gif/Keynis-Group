@@ -5,11 +5,12 @@ cd /var/www/html
 
 echo "==> Keynis Group : démarrage"
 
-# 1. APP_KEY obligatoire, sinon Laravel plante en 500 dès la première requête.
-if [ -z "${APP_KEY}" ]; then
-    echo "!! APP_KEY absente — génération d'une clé temporaire."
+# 1. APP_KEY obligatoire et au format base64:<32 octets>, sinon Laravel plante
+#    en 500 dès la première requête (cipher AES-256-CBC invalide).
+if [ -z "${APP_KEY}" ] || [ "$(printf '%s' "${APP_KEY}" | cut -c1-7)" != "base64:" ] || [ ${#APP_KEY} -lt 44 ]; then
+    echo "!! APP_KEY absente ou mal formée — génération d'une clé temporaire."
     echo "!! Les sessions et cookies seront invalidés à chaque redéploiement."
-    echo "!! Définis APP_KEY dans les variables d'environnement Render."
+    echo "!! Définis un APP_KEY valide (base64:...) dans les variables d'environnement Render."
     export APP_KEY="base64:$(head -c 32 /dev/urandom | base64)"
 fi
 
