@@ -38,8 +38,6 @@ services:
         value: "4"
       - key: RUN_SEEDERS
         value: "true"
-      - key: ADMIN_PASSWORD
-        sync: false      # à définir dans le dashboard Render, pas en clair ici
 
       - key: DB_CONNECTION
         value: pgsql
