@@ -17,20 +17,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if (! User::where('email', 'admin@keynisgroup.ci')->exists()) {
-            $adminPassword = env('ADMIN_PASSWORD') ?: Str::random(16);
+        $adminEmail = 'admin@keynisgroup.ci';
+        $admin = User::where('email', $adminEmail)->first();
+        $envPassword = env('ADMIN_PASSWORD');
+
+        if (! $admin) {
+            $adminPassword = $envPassword ?: Str::random(16);
 
             User::factory()->create([
                 'name' => 'Admin Keynis',
-                'email' => 'admin@keynisgroup.ci',
+                'email' => $adminEmail,
                 'role' => 'super_admin',
                 'password' => Hash::make($adminPassword),
             ]);
 
-            if (! env('ADMIN_PASSWORD')) {
-                $this->command?->warn("No ADMIN_PASSWORD set in .env — generated one-time admin password: {$adminPassword}");
+            if (! $envPassword) {
+                $this->command?->warn("No ADMIN_PASSWORD set — generated one-time admin password: {$adminPassword}");
                 $this->command?->warn('Log in and change it immediately, this will not be shown again.');
             }
+        } elseif ($envPassword) {
+            // ADMIN_PASSWORD set on an existing admin: treat it as a "break glass"
+            // reset (e.g. set it in Render's dashboard and redeploy to regain access).
+            $admin->forceFill(['password' => Hash::make($envPassword)])->save();
+            $this->command?->info('Admin password reset from ADMIN_PASSWORD.');
         }
 
         $this->call([
