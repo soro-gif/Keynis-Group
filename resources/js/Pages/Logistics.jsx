@@ -11,7 +11,10 @@ const blocks = [
 
 export default function Logistics() {
     return (
-        <SiteLayout title="Logistics & Supply Chain">
+        <SiteLayout
+            title="Logistics & Supply Chain"
+            description="Keynis mobilise son réseau de partenaires logistiques pour organiser vos flux de bout en bout : transport routier, maritime, aérien, transit, dédouanement et stockage."
+        >
             <PageHero
                 eyebrow="Logistics & Supply Chain"
                 title="Transport, transit, stockage et supply chain"

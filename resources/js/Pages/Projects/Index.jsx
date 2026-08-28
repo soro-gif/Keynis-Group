@@ -5,7 +5,10 @@ import Reveal from '@/Components/Motion/Reveal';
 
 export default function ProjectsIndex({ projects }) {
     return (
-        <SiteLayout title="Projets & Réalisations">
+        <SiteLayout
+            title="Projets & Réalisations"
+            description="Un aperçu des opérations de sourcing, mobilisations logistiques et distributions réalisées par Keynis Trading & Logistics Group."
+        >
             <PageHero
                 eyebrow="Projets & Réalisations"
                 title="Nos opérations sur le terrain"

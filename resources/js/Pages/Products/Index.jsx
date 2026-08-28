@@ -16,7 +16,10 @@ export default function ProductsIndex({ products, categories, filters, relatedAs
     }
 
     return (
-        <SiteLayout title="Produits & Marchés">
+        <SiteLayout
+            title="Produits & Marchés"
+            description="Catalogue produits Keynis : agriculture, BTP, industrie, équipements, eau & énergie, froid, matériaux et produits professionnels."
+        >
             <PageHero
                 eyebrow="Produits & Marchés"
                 title="Catalogue produits Keynis"

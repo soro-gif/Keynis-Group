@@ -3,7 +3,10 @@ import SiteLayout from '@/Layouts/SiteLayout';
 
 export default function ProjectShow({ project }) {
     return (
-        <SiteLayout title={project.title}>
+        <SiteLayout
+            title={project.title}
+            description={project.problem || `${project.title} — un projet réalisé par Keynis Trading & Logistics Group.`}
+        >
             <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
                 <Link href="/projets" className="text-sm font-semibold text-keynis-red hover:underline">← Projets & Réalisations</Link>
 

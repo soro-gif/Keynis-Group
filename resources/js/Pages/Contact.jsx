@@ -32,7 +32,10 @@ export default function Contact() {
     }
 
     return (
-        <SiteLayout title="Contact">
+        <SiteLayout
+            title="Contact"
+            description="Contactez Keynis Trading & Logistics Group pour vos besoins de sourcing, négoce, logistique ou distribution. Notre équipe vous répond rapidement."
+        >
             <PageHero eyebrow="Contact" title="Parlons de votre besoin" description="Notre équipe vous répond rapidement." />
 
             <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">

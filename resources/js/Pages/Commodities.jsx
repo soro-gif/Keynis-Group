@@ -11,7 +11,10 @@ export default function Commodities({ commodities, filters }) {
     }
 
     return (
-        <SiteLayout title="Commodities & Agribusiness">
+        <SiteLayout
+            title="Commodities & Agribusiness"
+            description="Keynis connecte producteurs, coopératives et transformateurs aux marchés internationaux : cacao, café, anacarde, céréales et produits agricoles."
+        >
             <PageHero
                 eyebrow="Commodities & Agribusiness"
                 title="Cacao, café, anacarde et produits agricoles"

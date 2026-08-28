@@ -27,7 +27,10 @@ export default function AssetsIndex({ assets, categories, filters }) {
     const [tab, setTab] = useState('parcourir');
 
     return (
-        <SiteLayout title="Location & Mobilisation d'actifs">
+        <SiteLayout
+            title="Location & Mobilisation d'actifs"
+            description="Keynis connecte propriétaires d'actifs et entreprises ayant des besoins de mobilisation : véhicules, engins BTP, machines agricoles et infrastructures."
+        >
             <PageHero
                 eyebrow="Location & Actifs"
                 title="Véhicules, engins BTP, machines et infrastructures"

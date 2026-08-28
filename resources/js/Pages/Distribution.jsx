@@ -10,7 +10,10 @@ const channels = [
 
 export default function Distribution() {
     return (
-        <SiteLayout title="Distribution multicanale">
+        <SiteLayout
+            title="Distribution multicanale"
+            description="Keynis combine circuits physiques et digitaux pour connecter l'offre à la demande : distribution B2B, professionnelle et digitale en Côte d'Ivoire."
+        >
             <PageHero
                 eyebrow="Distribution"
                 title="Une distribution multicanale, professionnelle et digitale"

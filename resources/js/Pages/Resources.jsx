@@ -8,7 +8,10 @@ const resourceTypes = [
 
 export default function Resources() {
     return (
-        <SiteLayout title="Ressources">
+        <SiteLayout
+            title="Ressources"
+            description="Retrouvez ici les catalogues, guides, fiches techniques et documents Keynis utiles à vos démarches de sourcing, négoce et logistique."
+        >
             <PageHero
                 eyebrow="Ressources"
                 title="Catalogues, guides et documents Keynis"

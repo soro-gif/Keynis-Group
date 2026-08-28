@@ -6,7 +6,10 @@ import Pagination from '@/Components/Pagination';
 
 export default function MarketWatchIndex({ articles }) {
     return (
-        <SiteLayout title="Market Watch">
+        <SiteLayout
+            title="Market Watch"
+            description="Veille et intelligence commerciale Keynis : prix, tendances, opportunités et analyses sur les marchés suivis."
+        >
             <PageHero
                 eyebrow="Market Watch"
                 title="Veille et intelligence commerciale"

@@ -14,7 +14,10 @@ const services = [
 
 export default function Trading() {
     return (
-        <SiteLayout title="Trading & Négoce">
+        <SiteLayout
+            title="Trading & Négoce"
+            description="Keynis identifie et mobilise les produits adaptés aux besoins des acheteurs, en Côte d'Ivoire comme à l'international : achat-revente, sourcing, importation, exportation."
+        >
             <PageHero
                 eyebrow="Trading & Négoce"
                 title="Sourcing, négoce et commercialisation B2B"

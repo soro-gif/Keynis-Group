@@ -97,7 +97,10 @@ export default function RfqCreate({ presetType }) {
     }
 
     return (
-        <SiteLayout title="Contact / RFQ">
+        <SiteLayout
+            title="Contact / RFQ"
+            description="Faites une demande de devis (RFQ) auprès de Keynis Trading & Logistics Group : sourcing, négoce, logistique, location d'actifs ou distribution."
+        >
             <PageHero
                 eyebrow="Contact / RFQ"
                 title="Demande, offre ou partenariat"

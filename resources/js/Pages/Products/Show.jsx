@@ -4,7 +4,10 @@ import { firstImage } from '@/utils/media';
 
 export default function ProductShow({ product, related }) {
     return (
-        <SiteLayout title={product.name}>
+        <SiteLayout
+            title={product.name}
+            description={product.description || `${product.name} — découvrez ce produit proposé par Keynis Trading & Logistics Group.`}
+        >
             <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
                 <nav className="mb-6 text-sm text-slate-500">
                     <Link href="/produits" className="hover:text-keynis-navy">Produits & Marchés</Link>

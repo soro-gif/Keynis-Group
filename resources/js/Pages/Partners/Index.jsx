@@ -30,7 +30,10 @@ const categoryOptions = [
 
 export default function PartnersIndex({ partners }) {
     return (
-        <SiteLayout title="Partenaires">
+        <SiteLayout
+            title="Partenaires"
+            description="Le réseau structuré de partenaires Keynis : producteurs, coopératives, fabricants, fournisseurs, transporteurs et distributeurs."
+        >
             <PageHero
                 eyebrow="Partenaires"
                 title="Un réseau structuré de partenaires"

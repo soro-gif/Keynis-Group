@@ -12,7 +12,10 @@ const capabilities = [
 
 export default function About() {
     return (
-        <SiteLayout title="À propos">
+        <SiteLayout
+            title="À propos"
+            description="Keynis Trading & Logistics Group connecte rapidement l'offre disponible aux besoins du marché : sourcing, négoce, logistique et distribution en Côte d'Ivoire."
+        >
             <PageHero
                 eyebrow="À propos"
                 title="Un intermédiaire commercial et logistique au service des marchés"

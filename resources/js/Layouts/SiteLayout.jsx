@@ -28,7 +28,10 @@ function isActive(url, href) {
     return href === '/' ? url === '/' : url.startsWith(href);
 }
 
-export default function SiteLayout({ title, children }) {
+const DEFAULT_DESCRIPTION =
+    "Keynis Trading & Logistics Group : sourcing, négoce, commodities, logistique, location d'actifs et distribution en Côte d'Ivoire et à l'international.";
+
+export default function SiteLayout({ title, description = DEFAULT_DESCRIPTION, children }) {
     const [open, setOpen] = useState(false);
     const [mobileActivitiesOpen, setMobileActivitiesOpen] = useState(false);
     const { url, props } = usePage();
@@ -37,7 +40,13 @@ export default function SiteLayout({ title, children }) {
 
     return (
         <div className="flex min-h-screen flex-col bg-white">
-            <Head title={title} />
+            <Head title={title}>
+                <meta name="description" content={description} />
+                <meta property="og:title" content={title ? `${title} | Keynis Trading & Logistics Group` : 'Keynis Trading & Logistics Group'} />
+                <meta property="og:description" content={description} />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="/images/logo-keynis.png" />
+            </Head>
 
             <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">

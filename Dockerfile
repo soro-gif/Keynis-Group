@@ -51,6 +51,10 @@ RUN composer install \
     --no-scripts
 
 # Compiler React / Inertia / Vite
+# VITE_APP_NAME est intégré dans le bundle JS au moment du build (Render ne fournit
+# ses variables d'environnement qu'à l'exécution, pas pendant "docker build"),
+# sinon le titre des pages retombe sur le défaut "Laravel".
+ENV VITE_APP_NAME="Keynis Trading & Logistics Group"
 RUN npm ci
 RUN npm run build
 

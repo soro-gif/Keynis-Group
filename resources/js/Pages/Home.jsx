@@ -25,7 +25,10 @@ const steps = [
 
 export default function Home({ categories = [], featuredProducts = [], latestArticles = [] }) {
     return (
-        <SiteLayout title="Sourcing, Négoce, Commodities, Logistics & Distribution">
+        <SiteLayout
+            title="Sourcing, Négoce, Commodities, Logistics & Distribution"
+            description="Keynis Trading & Logistics Group identifie les opportunités, approvisionne les marchés et organise les flux : trading, commodities, logistique, location d'actifs et distribution en Côte d'Ivoire."
+        >
             {/* Hero */}
             <section className="overflow-hidden bg-keynis-navy">
                 <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-28">
