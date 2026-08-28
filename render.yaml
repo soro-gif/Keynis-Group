@@ -22,7 +22,7 @@ services:
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
-        value: https://keynis-group-xu0n.onrender.com
+        value: https://www.keynisgroup.ci
       - key: APP_LOCALE
         value: fr
       - key: LOG_CHANNEL
