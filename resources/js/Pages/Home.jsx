@@ -271,7 +271,7 @@ function HeroImage() {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ perspective: 800 }}
-            className="hidden items-center justify-center lg:flex"
+            className="flex items-center justify-center"
         >
             <motion.img
                 src="/images/logo-keynis.png"
@@ -280,7 +280,7 @@ function HeroImage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: 'spring', stiffness: 250, damping: 18 }}
-                className="w-full max-w-md cursor-pointer rounded-2xl bg-white p-8 shadow-2xl"
+                className="w-full max-w-xs cursor-pointer rounded-2xl bg-white p-6 shadow-2xl sm:max-w-sm sm:p-8 lg:max-w-md"
             />
         </motion.div>
     );
