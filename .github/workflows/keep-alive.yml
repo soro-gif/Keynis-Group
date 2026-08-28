@@ -1,0 +1,14 @@
+name: Keep Render service awake
+
+on:
+  schedule:
+    # Every 10 minutes. Render's free plan sleeps after ~15 min of inactivity.
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health check endpoint
+        run: curl -fsS --max-time 60 https://keynis-group-xu0n.onrender.com/up
