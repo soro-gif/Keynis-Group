@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 
 export default function PageHero({ eyebrow, title, description }) {
     return (
-        <div className="overflow-hidden bg-keynis-navy">
+        <div className="overflow-hidden bg-keynis-navy print:hidden">
             <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
                 {eyebrow && (
                     <motion.p

@@ -48,7 +48,7 @@ export default function SiteLayout({ title, description = DEFAULT_DESCRIPTION, c
                 <meta property="og:image" content="/images/logo-keynis.png" />
             </Head>
 
-            <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
+            <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur print:hidden">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-2">
                         <img
@@ -191,7 +191,7 @@ export default function SiteLayout({ title, description = DEFAULT_DESCRIPTION, c
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105"
+                className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 print:hidden"
                 aria-label="Contacter Keynis sur WhatsApp"
             >
                 <svg viewBox="0 0 32 32" className="h-7 w-7" fill="currentColor">
@@ -276,7 +276,7 @@ function ActivitiesDropdown({ active }) {
 
 function Footer() {
     return (
-        <footer className="bg-keynis-navy text-slate-200">
+        <footer className="bg-keynis-navy text-slate-200 print:hidden">
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
                     <div>

@@ -24,10 +24,12 @@ class Partner extends Model
         'documents',
         'message',
         'status',
+        'confirmed_at',
     ];
 
     protected $casts = [
         'documents' => 'array',
+        'confirmed_at' => 'datetime',
     ];
 
     /**

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import PageHero from '@/Components/Site/PageHero';
@@ -10,9 +10,9 @@ import { isStepValid } from '@/utils/steps';
 import { mediaUrl } from '@/utils/media';
 
 const steps = [
-    { title: 'Entreprise', required: ['category', 'company_name'] },
-    { title: 'Contact', required: ['contact_name', 'country', 'phone', 'email'] },
-    { title: 'Activité', required: [] },
+    { title: 'Entreprise', required: ['category', 'company_name'], fields: ['logo', 'category', 'company_name', 'sector'] },
+    { title: 'Contact', required: ['contact_name', 'country', 'phone', 'email'], fields: ['contact_name', 'country', 'city', 'phone', 'whatsapp', 'email', 'website'] },
+    { title: 'Activité', required: [], fields: ['products_services', 'capacities', 'coverage_area', 'message'] },
 ];
 
 const categoryOptions = [
@@ -81,7 +81,7 @@ export default function PartnersIndex({ partners }) {
 
 function PartnerForm() {
     const [step, setStep] = useState(0);
-    const { data, setData, post, processing, errors, recentlySuccessful } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         category: '',
         company_name: '',
         contact_name: '',
@@ -99,6 +99,13 @@ function PartnerForm() {
         logo: null,
     });
 
+    useEffect(() => {
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length === 0) return;
+        const idx = steps.findIndex((s) => s.fields.some((f) => errorKeys.includes(f)));
+        if (idx !== -1) setStep(idx);
+    }, [errors]);
+
     function submit(e) {
         e.preventDefault();
         if (step < steps.length - 1) {
@@ -111,11 +118,6 @@ function PartnerForm() {
 
     return (
         <form onSubmit={submit} className="space-y-4 rounded-2xl bg-keynis-gray p-8">
-            {recentlySuccessful && (
-                <p className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
-                    Votre candidature a bien été enregistrée. Notre équipe sourcing reviendra vers vous.
-                </p>
-            )}
 
             <StepIndicator steps={steps.map((s) => s.title)} current={step} />
 

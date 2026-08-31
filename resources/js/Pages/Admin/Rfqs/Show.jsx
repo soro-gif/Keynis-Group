@@ -36,6 +36,11 @@ export default function AdminRfqShow({ rfq }) {
                 <div>
                     <p className="text-xs font-bold uppercase tracking-wide text-keynis-red">{rfq.category} · {rfq.type.replace(/_/g, ' ')}</p>
                     <h2 className="mt-1 text-xl font-extrabold text-keynis-navy">{rfq.reference}</h2>
+                    {rfq.confirmed_at && (
+                        <p className="mt-1 text-xs font-semibold text-green-700">
+                            ✓ Confirmé par le client le {new Date(rfq.confirmed_at).toLocaleString('fr-FR')}
+                        </p>
+                    )}
                 </div>
                 <div className="flex items-center gap-3 print:hidden">
                     <StatusSelect status={rfq.status} options={statusOptions} patchUrl={`/admin/rfqs/${rfq.id}`} />

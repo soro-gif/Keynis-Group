@@ -55,6 +55,7 @@ class Asset extends Model
         'price_per_mission',
         'documents_provided',
         'agreement',
+        'confirmed_at',
     ];
 
     protected $casts = [
@@ -68,6 +69,7 @@ class Asset extends Model
         'duration_type' => 'array',
         'documents_provided' => 'array',
         'agreement' => 'boolean',
+        'confirmed_at' => 'datetime',
     ];
 
     public function category(): BelongsTo

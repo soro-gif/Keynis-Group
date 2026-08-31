@@ -71,7 +71,7 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                                 Proposer un produit
                             </Link>
                             <Link href="/actifs" className="rounded-full border border-white/30 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10 hover:scale-[1.03] active:scale-95">
-                                Rechercher un actif
+                                Rechercher un produit
                             </Link>
                             <Link href="/rfq?type=demande_logistique" className="rounded-full border border-white/30 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10 hover:scale-[1.03] active:scale-95">
                                 Solution logistique

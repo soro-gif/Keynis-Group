@@ -13,5 +13,10 @@ class Contact extends Model
         'subject',
         'message',
         'status',
+        'confirmed_at',
+    ];
+
+    protected $casts = [
+        'confirmed_at' => 'datetime',
     ];
 }

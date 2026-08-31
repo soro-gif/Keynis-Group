@@ -30,6 +30,11 @@ export default function AdminContactsIndex({ contacts, filters }) {
                             <div>
                                 <p className="font-bold text-keynis-navy">{c.name} {c.subject && `· ${c.subject}`}</p>
                                 <p className="text-sm text-slate-500">{c.email}{c.phone ? ` · ${c.phone}` : ''} · {new Date(c.created_at).toLocaleDateString('fr-FR')}</p>
+                                {c.confirmed_at && (
+                                    <p className="mt-1 text-xs font-semibold text-green-700">
+                                        ✓ Confirmé par le client le {new Date(c.confirmed_at).toLocaleString('fr-FR')}
+                                    </p>
+                                )}
                             </div>
                             <div className="flex items-center gap-3">
                                 <StatusSelect status={c.status} options={statusOptions} patchUrl={`/admin/messages/${c.id}`} />

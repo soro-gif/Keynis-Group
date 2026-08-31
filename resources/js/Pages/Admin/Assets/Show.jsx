@@ -34,6 +34,11 @@ export default function AdminAssetShow({ asset }) {
                 <div>
                     <p className="text-xs font-bold uppercase tracking-wide text-keynis-red">{asset.category?.name || 'Sans catégorie'} · {asset.listing_type}</p>
                     <h2 className="mt-1 text-xl font-extrabold text-keynis-navy">{asset.name}</h2>
+                    {asset.confirmed_at && (
+                        <p className="mt-1 text-xs font-semibold text-green-700">
+                            ✓ Confirmé par le client le {new Date(asset.confirmed_at).toLocaleString('fr-FR')}
+                        </p>
+                    )}
                 </div>
                 <div className="flex items-center gap-3">
                     <StatusSelect status={asset.status} options={statusOptions} patchUrl={`/admin/actifs/${asset.id}`} />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import PageHero from '@/Components/Site/PageHero';
@@ -7,19 +7,26 @@ import StepNav from '@/Components/Form/StepNav';
 import { isStepValid } from '@/utils/steps';
 
 const steps = [
-    { title: 'Vos coordonnées', required: ['name', 'email'] },
-    { title: 'Votre message', required: ['message'] },
+    { title: 'Vos coordonnées', required: ['name', 'email'], fields: ['name', 'email', 'phone'] },
+    { title: 'Votre message', required: ['message'], fields: ['subject', 'message'] },
 ];
 
 export default function Contact() {
     const [step, setStep] = useState(0);
-    const { data, setData, post, processing, errors, recentlySuccessful, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         phone: '',
         subject: '',
         message: '',
     });
+
+    useEffect(() => {
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length === 0) return;
+        const idx = steps.findIndex((s) => s.fields.some((f) => errorKeys.includes(f)));
+        if (idx !== -1) setStep(idx);
+    }, [errors]);
 
     function submit(e) {
         e.preventDefault();
@@ -28,7 +35,7 @@ export default function Contact() {
             setStep((s) => s + 1);
             return;
         }
-        post('/contact', { preserveScroll: true, onSuccess: () => { reset(); setStep(0); } });
+        post('/contact', { preserveScroll: true });
     }
 
     return (
@@ -49,12 +56,6 @@ export default function Contact() {
                         <p className="mt-1 text-sm text-slate-600">contact@keynisgroup.ci</p>
                     </div>
                 </div>
-
-                {recentlySuccessful && (
-                    <p className="mb-6 rounded-lg bg-green-50 p-3 text-sm text-green-700">
-                        Votre message a bien été envoyé. Nous vous répondrons dans les meilleurs délais.
-                    </p>
-                )}
 
                 <form onSubmit={submit} className="space-y-4">
                     <StepIndicator steps={steps.map((s) => s.title)} current={step} />

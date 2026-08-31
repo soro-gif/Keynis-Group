@@ -49,6 +49,11 @@ export default function AdminPartnerShow({ partner }) {
                     <div>
                         <p className="text-xs font-bold uppercase tracking-wide text-keynis-red">{categoryLabels[partner.category] || partner.category}</p>
                         <h2 className="mt-1 text-xl font-extrabold text-keynis-navy">{partner.company_name}</h2>
+                        {partner.confirmed_at && (
+                            <p className="mt-1 text-xs font-semibold text-green-700">
+                                ✓ Confirmé par le client le {new Date(partner.confirmed_at).toLocaleString('fr-FR')}
+                            </p>
+                        )}
                     </div>
                 </div>
                 <div className="flex items-center gap-3">

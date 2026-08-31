@@ -21,26 +21,93 @@ class RfqController extends Controller
     {
         $validated = $request->validate([
             'category' => ['required', 'in:demande,offre,partenariat'],
-            'type' => ['required', 'string', 'max:100'],
+            'type' => ['required', 'string', 'in:'.implode(',', [
+                'demande_produit', 'demande_sourcing', 'demande_commodity', 'demande_logistique', 'recherche_actif',
+                'offre_produit', 'offre_stock', 'offre_producteur', 'offre_fabricant', 'offre_actif',
+                'partenariat_fournisseur', 'partenariat_producteur', 'partenariat_logistique', 'partenariat_distributeur',
+            ])],
             'name' => ['required', 'string', 'max:255'],
             'company' => ['nullable', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:50'],
-            'whatsapp' => ['nullable', 'string', 'max:50'],
+            'phone' => ['required', 'string', 'max:50', 'regex:/^[0-9+\-\s()]{6,20}$/'],
+            'whatsapp' => ['nullable', 'string', 'max:50', 'regex:/^[0-9+\-\s()]{6,20}$/'],
             'email' => ['required', 'email', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
             'subject' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'quantity' => ['nullable', 'string', 'max:255'],
             'budget' => ['nullable', 'string', 'max:255'],
-            'deadline' => ['nullable', 'date'],
+            'deadline' => ['nullable', 'date', 'after_or_equal:today'],
             'delivery_location' => ['nullable', 'string', 'max:255'],
+        ], [
+            'phone.regex' => 'Le numéro de téléphone n\'est pas valide.',
+            'whatsapp.regex' => 'Le numéro WhatsApp n\'est pas valide.',
+            'deadline.after_or_equal' => 'Le délai souhaité ne peut pas être une date passée.',
+            'type.in' => 'Le type de démarche sélectionné n\'est pas valide.',
         ]);
 
         $rfq = Rfq::create($validated);
 
-        return redirect()
-            ->route('rfq.create')
-            ->with('success', "Votre demande a bien été enregistrée sous la référence {$rfq->reference}. Notre équipe reviendra vers vous rapidement.");
+        session()->flash('rfq_submission_id', $rfq->id);
+        session()->flash('rfq_submission', [
+            'reference' => $rfq->reference,
+            'category' => $rfq->category,
+            'type' => $rfq->type,
+            'name' => $rfq->name,
+            'company' => $rfq->company,
+            'phone' => $rfq->phone,
+            'whatsapp' => $rfq->whatsapp,
+            'email' => $rfq->email,
+            'country' => $rfq->country,
+            'city' => $rfq->city,
+            'subject' => $rfq->subject,
+            'description' => $rfq->description,
+            'quantity' => $rfq->quantity,
+            'budget' => $rfq->budget,
+            'deadline' => $rfq->deadline?->toDateString(),
+            'delivery_location' => $rfq->delivery_location,
+            'submitted_at' => $rfq->created_at,
+            'confirmed_at' => null,
+        ]);
+
+        return redirect()->route('rfq.confirmation');
+    }
+
+    public function confirmation(): Response|RedirectResponse
+    {
+        $submission = session('rfq_submission');
+
+        if (! $submission) {
+            return redirect()->route('rfq.create');
+        }
+
+        session()->keep(['rfq_submission', 'rfq_submission_id']);
+
+        return Inertia::render('Rfq/Confirmation', [
+            'submission' => $submission,
+        ]);
+    }
+
+    public function confirm(): RedirectResponse
+    {
+        $id = session('rfq_submission_id');
+        $submission = session('rfq_submission');
+
+        if (! $id || ! $submission) {
+            return redirect()->route('rfq.create');
+        }
+
+        $rfq = Rfq::find($id);
+
+        if ($rfq && ! $rfq->confirmed_at) {
+            $rfq->update(['confirmed_at' => now()]);
+        }
+
+        $submission['confirmed_at'] = $rfq?->confirmed_at;
+
+        session()->flash('rfq_submission_id', $id);
+        session()->flash('rfq_submission', $submission);
+
+        return redirect()->route('rfq.confirmation');
     }
 }

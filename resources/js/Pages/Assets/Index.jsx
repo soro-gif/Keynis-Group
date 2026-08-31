@@ -158,7 +158,7 @@ function SearchAssetForm({ initialFamily }) {
 function ProposeAssetForm({ categories, initialFamily }) {
     const [step, setStep] = useState(0);
     const preselectedCategory = initialFamily ? categories.find((c) => c.family === initialFamily) : null;
-    const { data, setData, post, transform, processing, errors, recentlySuccessful } = useForm({
+    const { data, setData, post, transform, processing, errors } = useForm({
         category_id: preselectedCategory ? String(preselectedCategory.id) : '',
         owner_name: '',
         owner_type: '',
@@ -208,23 +208,42 @@ function ProposeAssetForm({ categories, initialFamily }) {
 
     const proposeSteps = useMemo(() => {
         const s = [
-            { title: 'Propriétaire', required: ['owner_name', 'owner_type', 'owner_phone', 'owner_email', 'address', 'city'] },
-            { title: 'Actif', required: ['category_id', 'name'] },
+            {
+                title: 'Propriétaire',
+                required: ['owner_name', 'owner_type', 'owner_phone', 'owner_email', 'address', 'city'],
+                fields: ['owner_name', 'owner_type', 'owner_company', 'owner_phone', 'owner_whatsapp', 'owner_email', 'id_number', 'address', 'city', 'contact_person', 'contact_role'],
+            },
+            {
+                title: 'Actif',
+                required: ['category_id', 'name'],
+                fields: isVehicle ? ['image', 'category_id', 'name'] : ['image', 'category_id', 'name', 'brand', 'model', 'year', 'capacity'],
+            },
         ];
         if (isVehicle) {
-            s.push({ title: 'Véhicule', required: ['brand', 'model', 'year', 'registration', 'color', 'condition', 'availability', 'intervention_zone'] });
-            s.push({ title: 'Disponibilité', required: [] });
-            s.push({ title: 'Documents', required: [] });
+            s.push({
+                title: 'Véhicule',
+                required: ['brand', 'model', 'year', 'registration', 'color', 'condition', 'availability', 'intervention_zone'],
+                fields: ['vehicle_category', 'vehicle_category_other', 'brand', 'model', 'year', 'registration', 'color', 'capacity', 'mileage', 'condition', 'transmission', 'engine', 'air_conditioning', 'equipment', 'availability', 'intervention_zone', 'driver_available', 'description'],
+            });
+            s.push({ title: 'Disponibilité', required: [], fields: ['available_days', 'schedule', 'service_zone', 'duration_type', 'with_driver', 'price_per_day', 'price_per_mission'] });
+            s.push({ title: 'Documents', required: [], fields: ['documents_provided'] });
         } else {
-            s.push({ title: 'Détails', required: [] });
+            s.push({ title: 'Détails', required: [], fields: ['location', 'indicative_price', 'description'] });
         }
-        s.push({ title: 'Engagement', required: [] });
+        s.push({ title: 'Engagement', required: [], fields: ['agreement'] });
         return s;
     }, [isVehicle]);
 
     useEffect(() => {
         setStep((s) => Math.min(s, proposeSteps.length - 1));
     }, [proposeSteps.length]);
+
+    useEffect(() => {
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length === 0) return;
+        const idx = proposeSteps.findIndex((s) => s.fields.some((f) => errorKeys.includes(f)));
+        if (idx !== -1) setStep(idx);
+    }, [errors, proposeSteps]);
 
     function toggleValue(field, value) {
         const current = data[field];
@@ -251,11 +270,6 @@ function ProposeAssetForm({ categories, initialFamily }) {
 
     return (
         <form onSubmit={submit} className="mt-8 max-w-2xl space-y-4">
-            {recentlySuccessful && (
-                <p className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
-                    Votre actif a bien été soumis. Notre équipe le validera avant publication.
-                </p>
-            )}
 
             <StepIndicator steps={proposeSteps.map((s) => s.title)} current={step} />
 

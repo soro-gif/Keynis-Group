@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
-import { usePage } from '@inertiajs/react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import PageHero from '@/Components/Site/PageHero';
 import StepIndicator from '@/Components/Form/StepIndicator';
@@ -8,9 +7,9 @@ import StepNav from '@/Components/Form/StepNav';
 import { isStepValid } from '@/utils/steps';
 
 const steps = [
-    { title: 'Démarche', required: ['type'] },
-    { title: 'Coordonnées', required: ['name', 'phone', 'email'] },
-    { title: 'Détails', required: ['subject'] },
+    { title: 'Démarche', required: ['type'], fields: ['category', 'type'] },
+    { title: 'Coordonnées', required: ['name', 'phone', 'email'], fields: ['name', 'company', 'phone', 'whatsapp', 'email', 'country', 'city'] },
+    { title: 'Détails', required: ['subject'], fields: ['subject', 'quantity', 'budget', 'deadline', 'delivery_location', 'description'] },
 ];
 
 const typesByCategory = {
@@ -44,9 +43,6 @@ function findCategoryForType(type) {
 }
 
 export default function RfqCreate({ presetType }) {
-    const { props } = usePage();
-    const flashSuccess = props.flash?.success;
-
     const initialSubject = typeof window !== 'undefined'
         ? new URLSearchParams(window.location.search).get('subject') || ''
         : '';
@@ -54,7 +50,7 @@ export default function RfqCreate({ presetType }) {
     const [category, setCategory] = useState(presetType ? findCategoryForType(presetType) : 'demande');
     const [step, setStep] = useState(0);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         category,
         type: presetType || typesByCategory[category][0][0],
         name: '',
@@ -80,6 +76,13 @@ export default function RfqCreate({ presetType }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
+    useEffect(() => {
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length === 0) return;
+        const idx = steps.findIndex((s) => s.fields.some((f) => errorKeys.includes(f)));
+        if (idx !== -1) setStep(idx);
+    }, [errors]);
+
     function submit(e) {
         e.preventDefault();
         if (step < steps.length - 1) {
@@ -87,13 +90,7 @@ export default function RfqCreate({ presetType }) {
             setStep((s) => s + 1);
             return;
         }
-        post('/rfq', {
-            preserveScroll: true,
-            onSuccess: () => {
-                reset('subject', 'description', 'quantity', 'budget', 'deadline', 'delivery_location');
-                setStep(0);
-            },
-        });
+        post('/rfq', { preserveScroll: true });
     }
 
     return (
@@ -108,12 +105,6 @@ export default function RfqCreate({ presetType }) {
             />
 
             <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-                {flashSuccess && (
-                    <div className="mb-8 rounded-xl bg-green-50 p-4 text-sm font-semibold text-green-700">
-                        {flashSuccess}
-                    </div>
-                )}
-
                 <div className="mb-8 flex flex-wrap gap-2">
                     {[
                         ['demande', 'Je fais une demande'],

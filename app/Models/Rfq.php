@@ -26,11 +26,13 @@ class Rfq extends Model
         'details',
         'attachment',
         'status',
+        'confirmed_at',
     ];
 
     protected $casts = [
         'details' => 'array',
         'deadline' => 'date',
+        'confirmed_at' => 'datetime',
     ];
 
     protected static function booted(): void
