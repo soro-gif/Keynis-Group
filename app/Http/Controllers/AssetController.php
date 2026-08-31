@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VehicleAssetSubmitted;
 use App\Models\Asset;
 use App\Models\AssetCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -104,6 +107,17 @@ class AssetController extends Controller
 
         $asset = Asset::create($validated);
         $asset->load('category');
+
+        if ($asset->category?->family === 'vehicules') {
+            try {
+                Mail::to('admin@keynisgroup.ci')->send(new VehicleAssetSubmitted($asset));
+            } catch (\Throwable $e) {
+                Log::error('Échec de l\'envoi du mail de notification véhicule (actif proposé)', [
+                    'asset_id' => $asset->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         session()->flash('asset_submission_id', $asset->id);
         session()->flash('asset_submission', [
