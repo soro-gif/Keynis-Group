@@ -93,7 +93,7 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                         </h2>
                         <p className="mt-4 text-slate-300">
                             Keynis référence des propriétaires de véhicules pour les missions professionnelles,
-                            logistiques, le transport, le terrain et les opérations spéciales — avec ou sans chauffeur.
+                            logistiques, le transport, le terrain et les opérations spéciales avec ou sans chauffeur.
                         </p>
                     </div>
                     <div className="mt-8 flex flex-shrink-0 flex-wrap gap-3 lg:mt-0">
