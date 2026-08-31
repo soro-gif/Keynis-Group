@@ -146,53 +146,119 @@ export default function RfqCreate({ presetType }) {
 
                     {step === 1 && (
                         <div className="grid grid-cols-2 gap-4">
-                            <Field label="Nom" error={errors.name}>
-                                <input value={data.name} onChange={(e) => setData('name', e.target.value)} className="input" />
+                            <Field label="Nom" required error={errors.name}>
+                                <input
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    placeholder="Ex : Koffi Jean-Baptiste"
+                                    required
+                                    className="input"
+                                />
                             </Field>
                             <Field label="Entreprise" error={errors.company}>
-                                <input value={data.company} onChange={(e) => setData('company', e.target.value)} className="input" />
+                                <input
+                                    value={data.company}
+                                    onChange={(e) => setData('company', e.target.value)}
+                                    placeholder="Nom de l'entreprise"
+                                    className="input"
+                                />
                             </Field>
-                            <Field label="Téléphone" error={errors.phone}>
-                                <input value={data.phone} onChange={(e) => setData('phone', e.target.value)} className="input" />
+                            <Field label="Téléphone" required error={errors.phone}>
+                                <input
+                                    value={data.phone}
+                                    onChange={(e) => setData('phone', e.target.value)}
+                                    placeholder="Ex : 07 15 25 89 89"
+                                    required
+                                    className="input"
+                                />
                             </Field>
                             <Field label="WhatsApp" error={errors.whatsapp}>
-                                <input value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} className="input" />
+                                <input
+                                    value={data.whatsapp}
+                                    onChange={(e) => setData('whatsapp', e.target.value)}
+                                    placeholder="Si différent du téléphone"
+                                    className="input"
+                                />
                             </Field>
-                            <Field label="E-mail" error={errors.email}>
-                                <input type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} className="input" />
+                            <Field label="E-mail" required error={errors.email}>
+                                <input
+                                    type="email"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    placeholder="Ex : nom@email.com"
+                                    required
+                                    className="input"
+                                />
                             </Field>
                             <Field label="Pays" error={errors.country}>
-                                <input value={data.country} onChange={(e) => setData('country', e.target.value)} className="input" />
+                                <input
+                                    value={data.country}
+                                    onChange={(e) => setData('country', e.target.value)}
+                                    placeholder="Ex : Côte d'Ivoire"
+                                    className="input"
+                                />
                             </Field>
                             <Field label="Ville" error={errors.city}>
-                                <input value={data.city} onChange={(e) => setData('city', e.target.value)} className="input" />
+                                <input
+                                    value={data.city}
+                                    onChange={(e) => setData('city', e.target.value)}
+                                    placeholder="Ex : Abidjan"
+                                    className="input"
+                                />
                             </Field>
                         </div>
                     )}
 
                     {step === 2 && (
                         <>
-                            <Field label="Produit / commodity / service concerné" error={errors.subject}>
-                                <input value={data.subject} onChange={(e) => setData('subject', e.target.value)} className="input" />
+                            <Field label="Produit / commodity / service concerné" required error={errors.subject}>
+                                <input
+                                    value={data.subject}
+                                    onChange={(e) => setData('subject', e.target.value)}
+                                    placeholder="Ex : Cacao, camion 10T, entrepôt frigorifique..."
+                                    required
+                                    className="input"
+                                />
                             </Field>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <Field label="Quantité" error={errors.quantity}>
-                                    <input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} className="input" />
+                                    <input
+                                        value={data.quantity}
+                                        onChange={(e) => setData('quantity', e.target.value)}
+                                        placeholder="Ex : 20 tonnes"
+                                        className="input"
+                                    />
                                 </Field>
                                 <Field label="Budget éventuel" error={errors.budget}>
-                                    <input value={data.budget} onChange={(e) => setData('budget', e.target.value)} className="input" />
+                                    <input
+                                        value={data.budget}
+                                        onChange={(e) => setData('budget', e.target.value)}
+                                        placeholder="Ex : 5 000 000 FCFA"
+                                        className="input"
+                                    />
                                 </Field>
                                 <Field label="Délai souhaité" error={errors.deadline}>
                                     <input type="date" value={data.deadline} onChange={(e) => setData('deadline', e.target.value)} className="input" />
                                 </Field>
                                 <Field label="Lieu de livraison" error={errors.delivery_location}>
-                                    <input value={data.delivery_location} onChange={(e) => setData('delivery_location', e.target.value)} className="input" />
+                                    <input
+                                        value={data.delivery_location}
+                                        onChange={(e) => setData('delivery_location', e.target.value)}
+                                        placeholder="Ex : Port d'Abidjan"
+                                        className="input"
+                                    />
                                 </Field>
                             </div>
 
                             <Field label="Description / commentaire" error={errors.description}>
-                                <textarea value={data.description} onChange={(e) => setData('description', e.target.value)} className="input" rows={4} />
+                                <textarea
+                                    value={data.description}
+                                    onChange={(e) => setData('description', e.target.value)}
+                                    placeholder="Précisez votre besoin, vos contraintes, vos préférences..."
+                                    className="input"
+                                    rows={4}
+                                />
                             </Field>
                         </>
                     )}
@@ -211,10 +277,13 @@ export default function RfqCreate({ presetType }) {
     );
 }
 
-function Field({ label, error, children }) {
+function Field({ label, required, error, children }) {
     return (
         <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-keynis-navy">{label}</span>
+            <span className="mb-1 block text-sm font-semibold text-keynis-navy">
+                {label}
+                {required && <span className="text-keynis-red"> *</span>}
+            </span>
             {children}
             {error && <span className="mt-1 block text-xs text-keynis-red">{error}</span>}
         </label>

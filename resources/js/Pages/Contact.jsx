@@ -61,14 +61,32 @@ export default function Contact() {
 
                     {step === 0 && (
                         <div className="grid grid-cols-2 gap-4">
-                            <Field label="Nom" error={errors.name}>
-                                <input value={data.name} onChange={(e) => setData('name', e.target.value)} className="input" />
+                            <Field label="Nom" required error={errors.name}>
+                                <input
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    placeholder="Ex : Koffi Jean-Baptiste"
+                                    required
+                                    className="input"
+                                />
                             </Field>
-                            <Field label="E-mail" error={errors.email}>
-                                <input type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} className="input" />
+                            <Field label="E-mail" required error={errors.email}>
+                                <input
+                                    type="email"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    placeholder="Ex : nom@email.com"
+                                    required
+                                    className="input"
+                                />
                             </Field>
                             <Field label="Téléphone" error={errors.phone}>
-                                <input value={data.phone} onChange={(e) => setData('phone', e.target.value)} className="input" />
+                                <input
+                                    value={data.phone}
+                                    onChange={(e) => setData('phone', e.target.value)}
+                                    placeholder="Ex : 07 15 25 89 89"
+                                    className="input"
+                                />
                             </Field>
                         </div>
                     )}
@@ -76,10 +94,22 @@ export default function Contact() {
                     {step === 1 && (
                         <>
                             <Field label="Sujet" error={errors.subject}>
-                                <input value={data.subject} onChange={(e) => setData('subject', e.target.value)} className="input" />
+                                <input
+                                    value={data.subject}
+                                    onChange={(e) => setData('subject', e.target.value)}
+                                    placeholder="Ex : Demande d'information"
+                                    className="input"
+                                />
                             </Field>
-                            <Field label="Message" error={errors.message}>
-                                <textarea value={data.message} onChange={(e) => setData('message', e.target.value)} className="input" rows={5} />
+                            <Field label="Message" required error={errors.message}>
+                                <textarea
+                                    value={data.message}
+                                    onChange={(e) => setData('message', e.target.value)}
+                                    placeholder="Décrivez votre besoin..."
+                                    required
+                                    className="input"
+                                    rows={5}
+                                />
                             </Field>
                         </>
                     )}
@@ -98,10 +128,13 @@ export default function Contact() {
     );
 }
 
-function Field({ label, error, children }) {
+function Field({ label, required, error, children }) {
     return (
         <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-keynis-navy">{label}</span>
+            <span className="mb-1 block text-sm font-semibold text-keynis-navy">
+                {label}
+                {required && <span className="text-keynis-red"> *</span>}
+            </span>
             {children}
             {error && <span className="mt-1 block text-xs text-keynis-red">{error}</span>}
         </label>

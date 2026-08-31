@@ -123,8 +123,8 @@ function PartnerForm() {
                 <>
                     <ImageField label="Logo de l'entreprise" value={data.logo} onChange={(file) => setData('logo', file)} error={errors.logo} />
 
-                    <Field label="Catégorie" error={errors.category}>
-                        <select value={data.category} onChange={(e) => setData('category', e.target.value)} className="input">
+                    <Field label="Catégorie" required error={errors.category}>
+                        <select value={data.category} onChange={(e) => setData('category', e.target.value)} required className="input">
                             <option value="">Sélectionner...</option>
                             {categoryOptions.map(([v, l]) => (
                                 <option key={v} value={v}>{l}</option>
@@ -132,38 +132,84 @@ function PartnerForm() {
                         </select>
                     </Field>
 
-                    <Field label="Raison sociale" error={errors.company_name}>
-                        <input value={data.company_name} onChange={(e) => setData('company_name', e.target.value)} className="input" />
+                    <Field label="Raison sociale" required error={errors.company_name}>
+                        <input
+                            value={data.company_name}
+                            onChange={(e) => setData('company_name', e.target.value)}
+                            placeholder="Ex : Keynis Trading & Logistics"
+                            required
+                            className="input"
+                        />
                     </Field>
 
                     <Field label="Secteur d'activité" error={errors.sector}>
-                        <input value={data.sector} onChange={(e) => setData('sector', e.target.value)} className="input" />
+                        <input
+                            value={data.sector}
+                            onChange={(e) => setData('sector', e.target.value)}
+                            placeholder="Ex : Agro-industrie, transport, BTP..."
+                            className="input"
+                        />
                     </Field>
                 </>
             )}
 
             {step === 1 && (
                 <div className="grid grid-cols-2 gap-4">
-                    <Field label="Nom du responsable" error={errors.contact_name}>
-                        <input value={data.contact_name} onChange={(e) => setData('contact_name', e.target.value)} className="input" />
+                    <Field label="Nom du responsable" required error={errors.contact_name}>
+                        <input
+                            value={data.contact_name}
+                            onChange={(e) => setData('contact_name', e.target.value)}
+                            placeholder="Ex : Koffi Jean-Baptiste"
+                            required
+                            className="input"
+                        />
                     </Field>
-                    <Field label="Pays" error={errors.country}>
-                        <input value={data.country} onChange={(e) => setData('country', e.target.value)} className="input" />
+                    <Field label="Pays" required error={errors.country}>
+                        <input
+                            value={data.country}
+                            onChange={(e) => setData('country', e.target.value)}
+                            placeholder="Ex : Côte d'Ivoire"
+                            required
+                            className="input"
+                        />
                     </Field>
                     <Field label="Ville" error={errors.city}>
-                        <input value={data.city} onChange={(e) => setData('city', e.target.value)} className="input" />
+                        <input value={data.city} onChange={(e) => setData('city', e.target.value)} placeholder="Ex : Abidjan" className="input" />
                     </Field>
-                    <Field label="Téléphone" error={errors.phone}>
-                        <input value={data.phone} onChange={(e) => setData('phone', e.target.value)} className="input" />
+                    <Field label="Téléphone" required error={errors.phone}>
+                        <input
+                            value={data.phone}
+                            onChange={(e) => setData('phone', e.target.value)}
+                            placeholder="Ex : 07 15 25 89 89"
+                            required
+                            className="input"
+                        />
                     </Field>
                     <Field label="WhatsApp" error={errors.whatsapp}>
-                        <input value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} className="input" />
+                        <input
+                            value={data.whatsapp}
+                            onChange={(e) => setData('whatsapp', e.target.value)}
+                            placeholder="Si différent du téléphone"
+                            className="input"
+                        />
                     </Field>
-                    <Field label="E-mail" error={errors.email}>
-                        <input type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} className="input" />
+                    <Field label="E-mail" required error={errors.email}>
+                        <input
+                            type="email"
+                            value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            placeholder="Ex : nom@entreprise.com"
+                            required
+                            className="input"
+                        />
                     </Field>
                     <Field label="Site internet" error={errors.website}>
-                        <input value={data.website} onChange={(e) => setData('website', e.target.value)} className="input" />
+                        <input
+                            value={data.website}
+                            onChange={(e) => setData('website', e.target.value)}
+                            placeholder="Ex : www.entreprise.com"
+                            className="input"
+                        />
                     </Field>
                 </div>
             )}
@@ -171,19 +217,42 @@ function PartnerForm() {
             {step === 2 && (
                 <>
                     <Field label="Produits / services proposés" error={errors.products_services}>
-                        <textarea value={data.products_services} onChange={(e) => setData('products_services', e.target.value)} className="input" rows={2} />
+                        <textarea
+                            value={data.products_services}
+                            onChange={(e) => setData('products_services', e.target.value)}
+                            placeholder="Ex : Cacao, café, transport routier..."
+                            className="input"
+                            rows={2}
+                        />
                     </Field>
 
                     <Field label="Capacités" error={errors.capacities}>
-                        <textarea value={data.capacities} onChange={(e) => setData('capacities', e.target.value)} className="input" rows={2} />
+                        <textarea
+                            value={data.capacities}
+                            onChange={(e) => setData('capacities', e.target.value)}
+                            placeholder="Ex : 500 tonnes/mois, 10 véhicules disponibles..."
+                            className="input"
+                            rows={2}
+                        />
                     </Field>
 
                     <Field label="Zone d'intervention" error={errors.coverage_area}>
-                        <input value={data.coverage_area} onChange={(e) => setData('coverage_area', e.target.value)} className="input" />
+                        <input
+                            value={data.coverage_area}
+                            onChange={(e) => setData('coverage_area', e.target.value)}
+                            placeholder="Ex : Abidjan, national, sous-région..."
+                            className="input"
+                        />
                     </Field>
 
                     <Field label="Message" error={errors.message}>
-                        <textarea value={data.message} onChange={(e) => setData('message', e.target.value)} className="input" rows={3} />
+                        <textarea
+                            value={data.message}
+                            onChange={(e) => setData('message', e.target.value)}
+                            placeholder="Informations complémentaires utiles à votre candidature..."
+                            className="input"
+                            rows={3}
+                        />
                     </Field>
                 </>
             )}
@@ -200,10 +269,13 @@ function PartnerForm() {
     );
 }
 
-function Field({ label, error, children }) {
+function Field({ label, required, error, children }) {
     return (
         <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-keynis-navy">{label}</span>
+            <span className="mb-1 block text-sm font-semibold text-keynis-navy">
+                {label}
+                {required && <span className="text-keynis-red"> *</span>}
+            </span>
             {children}
             {error && <span className="mt-1 block text-xs text-keynis-red">{error}</span>}
         </label>

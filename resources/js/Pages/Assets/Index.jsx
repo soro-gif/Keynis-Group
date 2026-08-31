@@ -208,11 +208,11 @@ function ProposeAssetForm({ categories, initialFamily }) {
 
     const proposeSteps = useMemo(() => {
         const s = [
-            { title: 'Propriétaire', required: ['owner_name', 'owner_phone', 'address', 'city'] },
+            { title: 'Propriétaire', required: ['owner_name', 'owner_type', 'owner_phone', 'owner_email', 'address', 'city'] },
             { title: 'Actif', required: ['category_id', 'name'] },
         ];
         if (isVehicle) {
-            s.push({ title: 'Véhicule', required: ['brand', 'model', 'year', 'registration', 'color', 'condition', 'intervention_zone'] });
+            s.push({ title: 'Véhicule', required: ['brand', 'model', 'year', 'registration', 'color', 'condition', 'availability', 'intervention_zone'] });
             s.push({ title: 'Disponibilité', required: [] });
             s.push({ title: 'Documents', required: [] });
         } else {
@@ -263,43 +263,99 @@ function ProposeAssetForm({ categories, initialFamily }) {
                 <>
                     <h3 className="text-sm font-bold uppercase tracking-wide text-keynis-navy">Informations sur le propriétaire</h3>
                     <div className="grid grid-cols-2 gap-4">
-                        <Field label="Nom & Prénoms / Raison sociale" error={errors.owner_name}>
-                            <input value={data.owner_name} onChange={(e) => setData('owner_name', e.target.value)} className="input" />
+                        <Field label="Nom & Prénoms / Raison sociale" required error={errors.owner_name}>
+                            <input
+                                value={data.owner_name}
+                                onChange={(e) => setData('owner_name', e.target.value)}
+                                placeholder="Ex : Koffi Jean-Baptiste"
+                                required
+                                className="input"
+                            />
                         </Field>
-                        <Field label="Type de propriétaire" error={errors.owner_type}>
-                            <select value={data.owner_type} onChange={(e) => setData('owner_type', e.target.value)} className="input">
+                        <Field label="Type de propriétaire" required error={errors.owner_type}>
+                            <select value={data.owner_type} onChange={(e) => setData('owner_type', e.target.value)} required className="input">
                                 <option value="">Sélectionner...</option>
                                 <option value="particulier">Particulier</option>
                                 <option value="entreprise">Entreprise</option>
                                 <option value="autre">Autre</option>
                             </select>
                         </Field>
-                        <Field label="Téléphone" error={errors.owner_phone}>
-                            <input value={data.owner_phone} onChange={(e) => setData('owner_phone', e.target.value)} className="input" />
+                        <Field label="Téléphone" required error={errors.owner_phone}>
+                            <input
+                                value={data.owner_phone}
+                                onChange={(e) => setData('owner_phone', e.target.value)}
+                                placeholder="Ex : 07 15 25 89 89"
+                                required
+                                className="input"
+                            />
                         </Field>
                         <Field label="WhatsApp" error={errors.owner_whatsapp}>
-                            <input value={data.owner_whatsapp} onChange={(e) => setData('owner_whatsapp', e.target.value)} className="input" />
+                            <input
+                                value={data.owner_whatsapp}
+                                onChange={(e) => setData('owner_whatsapp', e.target.value)}
+                                placeholder="Si différent du téléphone"
+                                className="input"
+                            />
                         </Field>
-                        <Field label="E-mail" error={errors.owner_email}>
-                            <input type="email" value={data.owner_email} onChange={(e) => setData('owner_email', e.target.value)} className="input" />
+                        <Field label="E-mail" required error={errors.owner_email}>
+                            <input
+                                type="email"
+                                value={data.owner_email}
+                                onChange={(e) => setData('owner_email', e.target.value)}
+                                placeholder="Ex : nom@email.com"
+                                required
+                                className="input"
+                            />
                         </Field>
                         <Field label="N° CNI / RCCM / CNPS / Autre" error={errors.id_number}>
-                            <input value={data.id_number} onChange={(e) => setData('id_number', e.target.value)} className="input" />
+                            <input
+                                value={data.id_number}
+                                onChange={(e) => setData('id_number', e.target.value)}
+                                placeholder="Numéro de la pièce"
+                                className="input"
+                            />
                         </Field>
                         <Field label="Entreprise (si applicable)" error={errors.owner_company}>
-                            <input value={data.owner_company} onChange={(e) => setData('owner_company', e.target.value)} className="input" />
+                            <input
+                                value={data.owner_company}
+                                onChange={(e) => setData('owner_company', e.target.value)}
+                                placeholder="Nom de l'entreprise"
+                                className="input"
+                            />
                         </Field>
-                        <Field label="Adresse" error={errors.address}>
-                            <input value={data.address} onChange={(e) => setData('address', e.target.value)} className="input" />
+                        <Field label="Adresse" required error={errors.address}>
+                            <input
+                                value={data.address}
+                                onChange={(e) => setData('address', e.target.value)}
+                                placeholder="Ex : Cocody, Rue des Jardins"
+                                required
+                                className="input"
+                            />
                         </Field>
-                        <Field label="Ville / Commune" error={errors.city}>
-                            <input value={data.city} onChange={(e) => setData('city', e.target.value)} className="input" />
+                        <Field label="Ville / Commune" required error={errors.city}>
+                            <input
+                                value={data.city}
+                                onChange={(e) => setData('city', e.target.value)}
+                                placeholder="Ex : Abidjan"
+                                required
+                                className="input"
+                            />
                         </Field>
                         <Field label="Personne à contacter" error={errors.contact_person}>
-                            <input value={data.contact_person} onChange={(e) => setData('contact_person', e.target.value)} className="input" />
+                            <input
+                                value={data.contact_person}
+                                onChange={(e) => setData('contact_person', e.target.value)}
+                                placeholder="Si différente du propriétaire"
+                                className="input"
+                            />
                         </Field>
                         <Field label="Fonction / Qualité" error={errors.contact_role}>
-                            <input value={data.contact_role} onChange={(e) => setData('contact_role', e.target.value)} className="input" />
+                            <input
+                                value={data.contact_role}
+                                onChange={(e) => setData('contact_role', e.target.value)}
+                                placeholder="Ex : Gérant, Représentant"
+                                className="input"
+                            />
                         </Field>
                     </div>
                 </>
@@ -309,8 +365,8 @@ function ProposeAssetForm({ categories, initialFamily }) {
                 <>
                     <ImageField value={data.image} onChange={(file) => setData('image', file)} error={errors.image} />
 
-                    <Field label="Catégorie" error={errors.category_id}>
-                        <select value={data.category_id} onChange={(e) => setData('category_id', e.target.value)} className="input">
+                    <Field label="Catégorie" required error={errors.category_id}>
+                        <select value={data.category_id} onChange={(e) => setData('category_id', e.target.value)} required className="input">
                             <option value="">Sélectionner...</option>
                             {categories.map((c) => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
@@ -318,23 +374,29 @@ function ProposeAssetForm({ categories, initialFamily }) {
                         </select>
                     </Field>
 
-                    <Field label="Nom de l'actif" error={errors.name}>
-                        <input value={data.name} onChange={(e) => setData('name', e.target.value)} className="input" />
+                    <Field label="Nom de l'actif" required error={errors.name}>
+                        <input
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            placeholder="Ex : Camion benne 10T"
+                            required
+                            className="input"
+                        />
                     </Field>
 
                     {!isVehicle && (
                         <div className="grid grid-cols-2 gap-4">
                             <Field label="Marque" error={errors.brand}>
-                                <input value={data.brand} onChange={(e) => setData('brand', e.target.value)} className="input" />
+                                <input value={data.brand} onChange={(e) => setData('brand', e.target.value)} placeholder="Ex : Caterpillar" className="input" />
                             </Field>
                             <Field label="Modèle" error={errors.model}>
-                                <input value={data.model} onChange={(e) => setData('model', e.target.value)} className="input" />
+                                <input value={data.model} onChange={(e) => setData('model', e.target.value)} placeholder="Ex : 320D" className="input" />
                             </Field>
                             <Field label="Année" error={errors.year}>
-                                <input value={data.year} onChange={(e) => setData('year', e.target.value)} className="input" />
+                                <input value={data.year} onChange={(e) => setData('year', e.target.value)} placeholder="Ex : 2020" className="input" />
                             </Field>
                             <Field label="Capacité" error={errors.capacity}>
-                                <input value={data.capacity} onChange={(e) => setData('capacity', e.target.value)} className="input" />
+                                <input value={data.capacity} onChange={(e) => setData('capacity', e.target.value)} placeholder="Ex : 10 tonnes" className="input" />
                             </Field>
                         </div>
                     )}
@@ -358,55 +420,61 @@ function ProposeAssetForm({ categories, initialFamily }) {
                     </Field>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Field label="Marque" error={errors.brand}>
-                            <input value={data.brand} onChange={(e) => setData('brand', e.target.value)} className="input" />
+                        <Field label="Marque" required error={errors.brand}>
+                            <input value={data.brand} onChange={(e) => setData('brand', e.target.value)} placeholder="Ex : Toyota" required className="input" />
                         </Field>
-                        <Field label="Modèle" error={errors.model}>
-                            <input value={data.model} onChange={(e) => setData('model', e.target.value)} className="input" />
+                        <Field label="Modèle" required error={errors.model}>
+                            <input value={data.model} onChange={(e) => setData('model', e.target.value)} placeholder="Ex : Land Cruiser Prado" required className="input" />
                         </Field>
-                        <Field label="Année" error={errors.year}>
-                            <input value={data.year} onChange={(e) => setData('year', e.target.value)} className="input" />
+                        <Field label="Année" required error={errors.year}>
+                            <input value={data.year} onChange={(e) => setData('year', e.target.value)} placeholder="Ex : 2021" required className="input" />
                         </Field>
-                        <Field label="Immatriculation" error={errors.registration}>
-                            <input value={data.registration} onChange={(e) => setData('registration', e.target.value)} className="input" />
+                        <Field label="Immatriculation" required error={errors.registration}>
+                            <input value={data.registration} onChange={(e) => setData('registration', e.target.value)} placeholder="Ex : CI 1234 AB 01" required className="input" />
                         </Field>
-                        <Field label="Couleur" error={errors.color}>
-                            <input value={data.color} onChange={(e) => setData('color', e.target.value)} className="input" />
+                        <Field label="Couleur" required error={errors.color}>
+                            <input value={data.color} onChange={(e) => setData('color', e.target.value)} placeholder="Ex : Gris métallisé" required className="input" />
                         </Field>
                         <Field label="Nombre de places" error={errors.capacity}>
-                            <input value={data.capacity} onChange={(e) => setData('capacity', e.target.value)} className="input" />
+                            <input value={data.capacity} onChange={(e) => setData('capacity', e.target.value)} placeholder="Ex : 5" className="input" />
                         </Field>
                         <Field label="Kilométrage" error={errors.mileage}>
-                            <input value={data.mileage} onChange={(e) => setData('mileage', e.target.value)} className="input" />
+                            <input value={data.mileage} onChange={(e) => setData('mileage', e.target.value)} placeholder="Ex : 45 000 km" className="input" />
                         </Field>
-                        <Field label="État général" error={errors.condition}>
-                            <input value={data.condition} onChange={(e) => setData('condition', e.target.value)} className="input" />
+                        <Field label="État général" required error={errors.condition}>
+                            <input value={data.condition} onChange={(e) => setData('condition', e.target.value)} placeholder="Ex : Très bon état" required className="input" />
                         </Field>
                         <Field label="Transmission" error={errors.transmission}>
-                            <input value={data.transmission} onChange={(e) => setData('transmission', e.target.value)} className="input" />
+                            <input value={data.transmission} onChange={(e) => setData('transmission', e.target.value)} placeholder="Ex : Automatique" className="input" />
                         </Field>
                         <Field label="Motorisation" error={errors.engine}>
-                            <input value={data.engine} onChange={(e) => setData('engine', e.target.value)} className="input" />
+                            <input value={data.engine} onChange={(e) => setData('engine', e.target.value)} placeholder="Ex : Diesel 3.0L" className="input" />
                         </Field>
                         <Field label="Climatisation" error={errors.air_conditioning}>
-                            <input value={data.air_conditioning} onChange={(e) => setData('air_conditioning', e.target.value)} className="input" />
+                            <input value={data.air_conditioning} onChange={(e) => setData('air_conditioning', e.target.value)} placeholder="Ex : Oui" className="input" />
                         </Field>
                         <Field label="GPS / Équipements" error={errors.equipment}>
-                            <input value={data.equipment} onChange={(e) => setData('equipment', e.target.value)} className="input" />
+                            <input value={data.equipment} onChange={(e) => setData('equipment', e.target.value)} placeholder="Ex : GPS, caméra de recul" className="input" />
                         </Field>
-                        <Field label="Disponibilité" error={errors.availability}>
-                            <input value={data.availability} onChange={(e) => setData('availability', e.target.value)} className="input" />
+                        <Field label="Disponibilité" required error={errors.availability}>
+                            <input value={data.availability} onChange={(e) => setData('availability', e.target.value)} placeholder="Ex : Immédiate" required className="input" />
                         </Field>
-                        <Field label="Zone d'intervention" error={errors.intervention_zone}>
-                            <input value={data.intervention_zone} onChange={(e) => setData('intervention_zone', e.target.value)} className="input" />
+                        <Field label="Zone d'intervention" required error={errors.intervention_zone}>
+                            <input value={data.intervention_zone} onChange={(e) => setData('intervention_zone', e.target.value)} placeholder="Ex : Abidjan et intérieur du pays" required className="input" />
                         </Field>
                         <Field label="Conducteur disponible ?" error={errors.driver_available}>
-                            <input value={data.driver_available} onChange={(e) => setData('driver_available', e.target.value)} className="input" />
+                            <input value={data.driver_available} onChange={(e) => setData('driver_available', e.target.value)} placeholder="Ex : Oui, sur demande" className="input" />
                         </Field>
                     </div>
 
                     <Field label="Observations / caractéristiques particulières" error={errors.description}>
-                        <textarea value={data.description} onChange={(e) => setData('description', e.target.value)} className="input" rows={3} />
+                        <textarea
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            placeholder="Toute information utile sur le véhicule..."
+                            className="input"
+                            rows={3}
+                        />
                     </Field>
                 </>
             )}
@@ -415,15 +483,21 @@ function ProposeAssetForm({ categories, initialFamily }) {
                 <>
                     <div className="grid grid-cols-2 gap-4">
                         <Field label="Localisation" error={errors.location}>
-                            <input value={data.location} onChange={(e) => setData('location', e.target.value)} className="input" />
+                            <input value={data.location} onChange={(e) => setData('location', e.target.value)} placeholder="Ex : Abidjan, Yopougon" className="input" />
                         </Field>
                         <Field label="Prix indicatif" error={errors.indicative_price}>
-                            <input value={data.indicative_price} onChange={(e) => setData('indicative_price', e.target.value)} className="input" />
+                            <input value={data.indicative_price} onChange={(e) => setData('indicative_price', e.target.value)} placeholder="Ex : 150 000 FCFA / jour" className="input" />
                         </Field>
                     </div>
 
                     <Field label="Description" error={errors.description}>
-                        <textarea value={data.description} onChange={(e) => setData('description', e.target.value)} className="input" rows={3} />
+                        <textarea
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            placeholder="Décrivez l'actif et ses conditions d'utilisation..."
+                            className="input"
+                            rows={3}
+                        />
                     </Field>
                 </>
             )}
@@ -450,10 +524,10 @@ function ProposeAssetForm({ categories, initialFamily }) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <Field label="Montant / jour (FCFA)" error={errors.price_per_day}>
-                            <input value={data.price_per_day} onChange={(e) => setData('price_per_day', e.target.value)} className="input" />
+                            <input value={data.price_per_day} onChange={(e) => setData('price_per_day', e.target.value)} placeholder="Ex : 75 000" className="input" />
                         </Field>
                         <Field label="Montant / mission (FCFA)" error={errors.price_per_mission}>
-                            <input value={data.price_per_mission} onChange={(e) => setData('price_per_mission', e.target.value)} className="input" />
+                            <input value={data.price_per_mission} onChange={(e) => setData('price_per_mission', e.target.value)} placeholder="Ex : 250 000" className="input" />
                         </Field>
                     </div>
                 </>
@@ -492,6 +566,7 @@ function ProposeAssetForm({ categories, initialFamily }) {
                             type="checkbox"
                             checked={data.agreement}
                             onChange={(e) => setData('agreement', e.target.checked)}
+                            required
                             className="mt-1"
                         />
                         J'accepte les conditions de référencement et la politique de confidentialité de KEYNIS GROUP.
@@ -546,10 +621,13 @@ function PillMultiSelect({ options, value, onToggle }) {
     );
 }
 
-function Field({ label, error, children }) {
+function Field({ label, required, error, children }) {
     return (
         <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-keynis-navy">{label}</span>
+            <span className="mb-1 block text-sm font-semibold text-keynis-navy">
+                {label}
+                {required && <span className="text-keynis-red"> *</span>}
+            </span>
             {children}
             {error && <span className="mt-1 block text-xs text-keynis-red">{error}</span>}
         </label>
