@@ -46,24 +46,18 @@ services:
       # Envoi d'e-mails (obligatoire pour la réinitialisation de mot de passe) :
       # sans ces variables, MAIL_MAILER retombe sur "log" et les e-mails ne sont
       # jamais réellement envoyés, ils sont seulement écrits dans les logs.
-      # Fournisseur : Gmail SMTP (compte Google + mot de passe d'application, cf.
-      # myaccount.google.com/apppasswords, nécessite la validation en 2 étapes).
-      # Gmail réécrit le From par l'adresse authentifiée : MAIL_FROM_ADDRESS doit
-      # donc être la même adresse Gmail que MAIL_USERNAME.
+      # Fournisseur : Resend, via son API HTTPS (pas de connexion SMTP) — le plan
+      # gratuit de Render bloque tout le trafic sortant vers les ports SMTP
+      # (25/465/587), donc un mailer SMTP classique (Gmail, Brevo, cPanel...) ne
+      # peut pas fonctionner ici tant que le service reste sur le plan free.
+      # RESEND_API_KEY vient de resend.com > API Keys, une fois le domaine
+      # keynisgroup.ci vérifié (resend.com > Domains).
       - key: MAIL_MAILER
-        value: smtp
-      - key: MAIL_HOST
-        value: smtp.gmail.com
-      - key: MAIL_PORT
-        value: "587"
-      - key: MAIL_SCHEME
-        value: smtp        # STARTTLS sur le port 587
-      - key: MAIL_USERNAME
-        sync: false      # ton-adresse@gmail.com
-      - key: MAIL_PASSWORD
-        sync: false      # mot de passe d'application (16 caractères), pas le mot de passe du compte
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false      # clé API Resend (commence par "re_")
       - key: MAIL_FROM_ADDRESS
-        sync: false      # la MÊME adresse que MAIL_USERNAME
+        value: "contact@keynisgroup.ci"
       - key: MAIL_FROM_NAME
         value: "Keynis Trading & Logistics Group"
 
