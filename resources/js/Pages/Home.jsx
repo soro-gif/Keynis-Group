@@ -83,6 +83,36 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                 </div>
             </section>
 
+            {/* Location de véhicules */}
+            <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+                <Reveal className="overflow-hidden rounded-3xl bg-keynis-navy px-6 py-12 sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-10">
+                    <div className="max-w-2xl">
+                        <p className="text-sm font-bold uppercase tracking-widest text-keynis-red">Location de véhicules</p>
+                        <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
+                            Berline, 4x4, pick-up : trouvez ou proposez un véhicule pour vos missions
+                        </h2>
+                        <p className="mt-4 text-slate-300">
+                            Keynis référence des propriétaires de véhicules pour les missions professionnelles,
+                            logistiques, le transport, le terrain et les opérations spéciales — avec ou sans chauffeur.
+                        </p>
+                    </div>
+                    <div className="mt-8 flex flex-shrink-0 flex-wrap gap-3 lg:mt-0">
+                        <Link
+                            href="/actifs?tab=recherche&family=vehicules"
+                            className="rounded-full bg-keynis-red px-6 py-3 text-sm font-bold text-white transition hover:bg-keynis-red-dark hover:scale-[1.03] active:scale-95"
+                        >
+                            Demander un véhicule
+                        </Link>
+                        <Link
+                            href="/actifs?tab=propose&family=vehicules"
+                            className="rounded-full bg-white px-6 py-3 text-sm font-bold text-keynis-navy transition hover:bg-slate-100 hover:scale-[1.03] active:scale-95"
+                        >
+                            Proposer un véhicule
+                        </Link>
+                    </div>
+                </Reveal>
+            </section>
+
             {/* Modèle */}
             <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="grid gap-8 sm:grid-cols-3">
