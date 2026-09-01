@@ -1,22 +1,7 @@
 import { useRef, useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
 import SiteLayout from '@/Layouts/SiteLayout';
-
-const COLORS = {
-    marineProfond: '#06103A',
-    marine: '#0A1C5A',
-    marineClair: '#16296E',
-    rouge: '#DA0910',
-    grisPortuaire: '#EAECF1',
-    blanc: '#FFFFFF',
-    encre: '#12151C',
-    grisSecondaire: '#6E7788',
-    filetClair: '#C6CCD8',
-    filetSombre: 'rgba(255,255,255,0.16)',
-};
-
-const FONT_TITLE = "'Barlow Semi Condensed', 'Barlow', sans-serif";
-const FONT_BODY = "'Barlow', sans-serif";
+import { BrandFonts, BrandStyles, Breadcrumb, CurveMotif, ArrowOutIcon, InfoBlock, QuickCallBlock } from '@/Components/Site/Brand';
+import { COLORS, FONT_TITLE, FONT_BODY } from '@/lib/brand';
 
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Angr%C3%A9+Les+Oscars%2C+Cocody%2C+Abidjan%2C+C%C3%B4te+d%27Ivoire';
 
@@ -67,30 +52,8 @@ export default function Contact() {
             title="Contact"
             description="Contactez Keynis Trading & Logistics Group pour un devis, le suivi d'une expédition ou une formalité douanière. Réponse sous 24 h ouvrées."
         >
-            <Head>
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap"
-                    rel="stylesheet"
-                />
-            </Head>
-
-            <style>{`
-                @keyframes kn-reveal {
-                    from { opacity: 0; transform: translateY(-6px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .kn-reveal { animation: kn-reveal 220ms ease-out; }
-                @media (prefers-reduced-motion: reduce) {
-                    .kn-reveal { animation: none; }
-                }
-                .kn-coord-row:hover { background-color: rgba(255,255,255,0.04); }
-                .kn-btn-primary { background-color: ${COLORS.marine}; }
-                .kn-btn-primary:hover { background-color: ${COLORS.marineClair}; }
-                .kn-maps-link:hover { color: ${COLORS.marineClair}; }
-                .kn-tel-block:hover { background-color: ${COLORS.marineClair}; }
-            `}</style>
+            <BrandFonts />
+            <BrandStyles />
 
             <HeroBandeau />
 
@@ -111,17 +74,7 @@ function HeroBandeau() {
             <CurveMotif corner="bottom-right" />
 
             <div className="relative z-10 mx-auto max-w-[1180px] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-                <nav aria-label="Fil d'Ariane" className="mb-10 flex items-center gap-2 text-sm">
-                    <Link
-                        href="/"
-                        className="rounded-[2px] transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#DA0910]"
-                        style={{ color: 'rgba(255,255,255,0.6)', fontFamily: FONT_BODY }}
-                    >
-                        Accueil
-                    </Link>
-                    <span aria-hidden="true" style={{ color: 'rgba(255,255,255,0.4)' }}>/</span>
-                    <span style={{ color: COLORS.blanc, fontFamily: FONT_BODY }}>Contact</span>
-                </nav>
+                <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Contact' }]} />
 
                 <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
                     <div>
@@ -187,35 +140,6 @@ function HeroBandeau() {
                 </div>
             </div>
         </div>
-    );
-}
-
-function CurveMotif({ corner }) {
-    const isTopLeft = corner === 'top-left';
-    return (
-        <svg
-            aria-hidden="true"
-            viewBox="0 0 140 140"
-            className="pointer-events-none absolute h-24 w-24 sm:h-32 sm:w-32"
-            style={{
-                top: isTopLeft ? -8 : undefined,
-                left: isTopLeft ? -8 : undefined,
-                bottom: isTopLeft ? undefined : -8,
-                right: isTopLeft ? undefined : -8,
-                transform: isTopLeft ? undefined : 'rotate(180deg)',
-            }}
-        >
-            <path d="M0,140 A140,140 0 0 1 140,0" fill="none" stroke="#FFFFFF" strokeOpacity="0.35" strokeWidth="7" />
-            <path d="M18,140 A122,122 0 0 1 140,18" fill="none" stroke={COLORS.rouge} strokeWidth="7" />
-        </svg>
-    );
-}
-
-function ArrowOutIcon() {
-    return (
-        <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" d="M6 3.5h6.5V10M12.5 3.5 3.5 12.5" />
-        </svg>
     );
 }
 
@@ -468,10 +392,7 @@ function ConfirmationPanel({ email, onReset }) {
 function InfoColumn() {
     return (
         <div className="space-y-10">
-            <div style={{ borderTop: `2px solid ${COLORS.marine}` }} className="pt-5">
-                <h2 style={{ fontFamily: FONT_TITLE, color: COLORS.encre }} className="mb-4 text-lg font-semibold">
-                    Heures d'ouverture
-                </h2>
+            <InfoBlock title="Heures d'ouverture">
                 <ul className="space-y-2.5">
                     {OPENING_HOURS.map((h) => (
                         <li key={h.day} className="flex items-baseline justify-between gap-4">
@@ -487,12 +408,9 @@ function InfoColumn() {
                 <p className="mt-4 text-xs" style={{ color: COLORS.grisSecondaire, fontFamily: FONT_BODY }}>
                     Heure d'Abidjan (GMT)
                 </p>
-            </div>
+            </InfoBlock>
 
-            <div style={{ borderTop: `2px solid ${COLORS.marine}` }} className="pt-5">
-                <h2 style={{ fontFamily: FONT_TITLE, color: COLORS.encre }} className="mb-4 text-lg font-semibold">
-                    Venir nous voir
-                </h2>
+            <InfoBlock title="Venir nous voir">
                 <p className="text-sm" style={{ color: COLORS.encre, fontFamily: FONT_BODY, lineHeight: 1.6 }}>
                     Angré Les Oscars
                     <br />
@@ -508,25 +426,15 @@ function InfoColumn() {
                     Ouvrir dans Google Maps
                     <ArrowOutIcon />
                 </a>
-            </div>
+            </InfoBlock>
 
-            <div style={{ borderTop: `2px solid ${COLORS.marine}` }} className="pt-5">
-                <h2 style={{ fontFamily: FONT_TITLE, color: COLORS.encre }} className="mb-4 text-lg font-semibold">
-                    Une expédition en cours ?
-                </h2>
-                <p className="text-sm" style={{ color: COLORS.grisSecondaire, fontFamily: FONT_BODY, lineHeight: 1.6 }}>
-                    Pour un suivi immédiat, l'appel reste le canal le plus rapide.
-                </p>
-                <a
-                    href="tel:+2250715258988"
-                    className="kn-tel-block mt-4 block rounded-[2px] px-5 py-4 text-center transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#DA0910]"
-                    style={{ backgroundColor: COLORS.marine }}
-                >
-                    <span className="text-[22px] font-semibold" style={{ color: COLORS.blanc, fontFamily: FONT_TITLE }}>
-                        +225 07 15 25 89 88
-                    </span>
-                </a>
-            </div>
+            <InfoBlock title="Une expédition en cours ?">
+                <QuickCallBlock
+                    lead="Pour un suivi immédiat, l'appel reste le canal le plus rapide."
+                    phoneDisplay="+225 07 15 25 89 88"
+                    phoneHref="tel:+2250715258988"
+                />
+            </InfoBlock>
         </div>
     );
 }
