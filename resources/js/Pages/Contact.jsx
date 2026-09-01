@@ -39,7 +39,7 @@ const CONTACT_DETAILS = [
     },
 ];
 
-const INITIAL_FORM = { name: '', email: '', message: '' };
+const INITIAL_FORM = { name: '', email: '', subject: '', message: '' };
 
 export default function Contact() {
     return (
@@ -114,6 +114,7 @@ function ContactForm() {
     const [submittedEmail, setSubmittedEmail] = useState('');
     const nameRef = useRef(null);
     const emailRef = useRef(null);
+    const subjectRef = useRef(null);
     const messageRef = useRef(null);
 
     function update(field, value) {
@@ -132,6 +133,7 @@ function ContactForm() {
 
         if (!form.name.trim()) nextErrors.name = 'Indiquez votre nom pour que nous sachions à qui répondre.';
         if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) nextErrors.email = 'Cette adresse e-mail est incomplète.';
+        if (!form.subject.trim()) nextErrors.subject = "Précisez l'objet de votre demande.";
         if (form.message.trim().length < 10) nextErrors.message = 'Décrivez votre demande en quelques mots (10 caractères minimum).';
 
         setErrors(nextErrors);
@@ -139,6 +141,7 @@ function ContactForm() {
         const firstError = [
             ['name', nameRef],
             ['email', emailRef],
+            ['subject', subjectRef],
             ['message', messageRef],
         ].find(([field]) => nextErrors[field]);
 
@@ -209,6 +212,15 @@ function ContactForm() {
                         onChange={(event) => update('email', event.target.value)}
                         error={errors.email}
                         inputRef={emailRef}
+                    />
+                    <FormInput
+                        id="contact-subject"
+                        label="Objet"
+                        placeholder="Objet de votre demande"
+                        value={form.subject}
+                        onChange={(event) => update('subject', event.target.value)}
+                        error={errors.subject}
+                        inputRef={subjectRef}
                     />
 
                     <div>
