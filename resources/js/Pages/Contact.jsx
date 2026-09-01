@@ -234,7 +234,7 @@ function ContactForm() {
                             placeholder="Décrivez votre demande : marchandise, origine, destination, volume et échéance…"
                             aria-invalid={Boolean(errors.message)}
                             aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                            className="w-full resize-y rounded-[2px] border-0 bg-white px-5 py-4 text-[15px] leading-6 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px]"
+                            className="w-full resize-y rounded-lg border-0 bg-white px-5 py-4 text-[15px] leading-6 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px]"
                             style={{ color: COLORS.encre, outlineColor: COLORS.rouge, fontFamily: FONT_BODY }}
                         />
                         {errors.message && <ErrorMessage id="contact-message-error">{errors.message}</ErrorMessage>}
@@ -271,7 +271,7 @@ function FormInput({ id, type = 'text', label, placeholder, value, onChange, err
                 placeholder={placeholder}
                 aria-invalid={Boolean(error)}
                 aria-describedby={error ? `${id}-error` : undefined}
-                className="w-full rounded-[2px] border-0 bg-white px-5 py-4 text-[15px] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px]"
+                className="w-full rounded-lg border-0 bg-white px-5 py-4 text-[15px] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px]"
                 style={{ color: COLORS.encre, outlineColor: COLORS.rouge, fontFamily: FONT_BODY }}
             />
             {error && <ErrorMessage id={`${id}-error`}>{error}</ErrorMessage>}
