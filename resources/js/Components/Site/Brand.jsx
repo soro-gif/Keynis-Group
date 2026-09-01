@@ -95,11 +95,16 @@ export function Breadcrumb({ items }) {
     );
 }
 
-export function InfoBlock({ title, children }) {
+export function InfoBlock({ title, icon, children }) {
     return (
         <div style={{ borderTop: `2px solid ${COLORS.marine}` }} className="pt-5">
-            <h2 style={{ fontFamily: FONT_TITLE, color: COLORS.encre }} className="mb-4 text-lg font-semibold">
-                {title}
+            <h2 style={{ fontFamily: FONT_TITLE, color: COLORS.encre }} className="mb-4 flex items-center gap-2.5 text-lg font-semibold">
+                {icon && (
+                    <span className="flex h-7 w-7 items-center justify-center rounded-[2px]" style={{ color: COLORS.rouge, backgroundColor: COLORS.blanc }}>
+                        {icon}
+                    </span>
+                )}
+                <span>{title}</span>
             </h2>
             {children}
         </div>
