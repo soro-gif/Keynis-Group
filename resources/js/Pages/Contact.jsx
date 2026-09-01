@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { BrandFonts, BrandStyles } from '@/Components/Site/Brand';
 import { COLORS, FONT_BODY, FONT_TITLE } from '@/lib/brand';
@@ -110,7 +110,14 @@ function ContactInformation() {
 }
 
 function ContactForm() {
-    const { data, setData, post, processing, errors } = useForm(INITIAL_FORM);
+    const { component, props } = usePage();
+    const isRfq = component === 'Rfq/Create';
+    const flashSuccess = isRfq ? props.flash?.success : null;
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        ...INITIAL_FORM,
+        origin: isRfq ? 'rfq' : 'contact',
+    });
     const nameRef = useRef(null);
     const emailRef = useRef(null);
     const subjectRef = useRef(null);
@@ -129,7 +136,10 @@ function ContactForm() {
 
     function submit(event) {
         event.preventDefault();
-        post('/contact', { preserveScroll: true });
+        post('/contact', {
+            preserveScroll: true,
+            onSuccess: () => reset('name', 'email', 'subject', 'message'),
+        });
     }
 
     return (
@@ -146,6 +156,24 @@ function ContactForm() {
                         <ContactIcon name="message" className="h-5 w-5" />
                     </span>
                 </div>
+
+                {flashSuccess && (
+                    <div
+                        role="status"
+                        className="mb-6 flex items-center gap-3 rounded-lg p-4"
+                        style={{ backgroundColor: COLORS.blanc, border: `1px solid ${COLORS.marine}` }}
+                    >
+                        <span
+                            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-white"
+                            style={{ backgroundColor: COLORS.marine }}
+                        >
+                            <ContactIcon name="check" className="h-4 w-4" />
+                        </span>
+                        <p className="text-sm" style={{ color: COLORS.encre, fontFamily: FONT_BODY }}>
+                            {flashSuccess}
+                        </p>
+                    </div>
+                )}
 
                 <div className="space-y-5">
                     <FormInput

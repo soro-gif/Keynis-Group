@@ -47,6 +47,10 @@ class ContactController extends Controller
             ]);
         }
 
+        if ($request->input('origin') === 'rfq') {
+            return redirect()->route('rfq.create')->with('success', 'Message envoyé. Nous vous répondrons sous 24 h ouvrées.');
+        }
+
         session()->flash('contact_submission_id', $contact->id);
         session()->flash('contact_submission', [
             'reference' => 'CT-'.str_pad((string) $contact->id, 6, '0', STR_PAD_LEFT),
