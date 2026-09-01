@@ -24,10 +24,16 @@ class ContactController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50', 'regex:/^[0-9+\-\s()]{6,20}$/'],
-            'subject' => ['nullable', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:5000'],
+            'subject' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'min:10', 'max:5000'],
         ], [
+            'name.required' => 'Indiquez votre nom pour que nous sachions à qui répondre.',
+            'email.required' => 'Cette adresse e-mail est incomplète.',
+            'email.email' => 'Cette adresse e-mail est incomplète.',
             'phone.regex' => 'Le numéro de téléphone n\'est pas valide.',
+            'subject.required' => 'Précisez l\'objet de votre demande.',
+            'message.required' => 'Décrivez votre demande en quelques mots (10 caractères minimum).',
+            'message.min' => 'Décrivez votre demande en quelques mots (10 caractères minimum).',
         ]);
 
         $contact = Contact::create($validated);

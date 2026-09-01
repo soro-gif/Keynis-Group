@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useForm } from '@inertiajs/react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { BrandFonts, BrandStyles } from '@/Components/Site/Brand';
 import { COLORS, FONT_BODY, FONT_TITLE } from '@/lib/brand';
@@ -109,73 +110,26 @@ function ContactInformation() {
 }
 
 function ContactForm() {
-    const [form, setForm] = useState(INITIAL_FORM);
-    const [errors, setErrors] = useState({});
-    const [submittedEmail, setSubmittedEmail] = useState('');
+    const { data, setData, post, processing, errors } = useForm(INITIAL_FORM);
     const nameRef = useRef(null);
     const emailRef = useRef(null);
     const subjectRef = useRef(null);
     const messageRef = useRef(null);
 
-    function update(field, value) {
-        setForm((current) => ({ ...current, [field]: value }));
-        setErrors((current) => {
-            if (!current[field]) return current;
-            const next = { ...current };
-            delete next[field];
-            return next;
-        });
-    }
-
-    function submit(event) {
-        event.preventDefault();
-        const nextErrors = {};
-
-        if (!form.name.trim()) nextErrors.name = 'Indiquez votre nom pour que nous sachions à qui répondre.';
-        if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) nextErrors.email = 'Cette adresse e-mail est incomplète.';
-        if (!form.subject.trim()) nextErrors.subject = "Précisez l'objet de votre demande.";
-        if (form.message.trim().length < 10) nextErrors.message = 'Décrivez votre demande en quelques mots (10 caractères minimum).';
-
-        setErrors(nextErrors);
-
+    useEffect(() => {
         const firstError = [
             ['name', nameRef],
             ['email', emailRef],
             ['subject', subjectRef],
             ['message', messageRef],
-        ].find(([field]) => nextErrors[field]);
+        ].find(([field]) => errors[field]);
 
-        if (firstError) {
-            firstError[1].current?.focus();
-            return;
-        }
+        firstError?.[1]?.current?.focus();
+    }, [errors]);
 
-        // Envoi simulé. Pour brancher Inertia : router.post('/contact', form)
-        setSubmittedEmail(form.email);
-    }
-
-    if (submittedEmail) {
-        return (
-            <div className="flex min-h-[560px] items-center px-7 py-12 sm:px-12 lg:px-14" style={{ backgroundColor: '#D9DCE3' }}>
-                <div role="status" className="w-full rounded-[2px] bg-white p-8" style={{ borderTop: `4px solid ${COLORS.rouge}` }}>
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full text-white" style={{ backgroundColor: COLORS.marine }}>
-                        <ContactIcon name="check" className="h-6 w-6" />
-                    </span>
-                    <h2 className="mt-6 text-3xl font-semibold" style={{ color: COLORS.marineProfond, fontFamily: FONT_TITLE }}>Message envoyé</h2>
-                    <p className="mt-3 text-sm leading-6" style={{ color: COLORS.grisSecondaire, fontFamily: FONT_BODY }}>
-                        Notre équipe répondra à <strong style={{ color: COLORS.encre }}>{submittedEmail}</strong> sous 24 heures ouvrées.
-                    </p>
-                    <button
-                        type="button"
-                        onClick={() => { setForm(INITIAL_FORM); setSubmittedEmail(''); }}
-                        className="mt-7 rounded-full border px-6 py-3 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px]"
-                        style={{ borderColor: COLORS.marine, color: COLORS.marine, outlineColor: COLORS.rouge, fontFamily: FONT_BODY }}
-                    >
-                        Écrire un autre message
-                    </button>
-                </div>
-            </div>
-        );
+    function submit(event) {
+        event.preventDefault();
+        post('/contact', { preserveScroll: true });
     }
 
     return (
@@ -198,8 +152,8 @@ function ContactForm() {
                         id="contact-name"
                         label="Nom et prénoms"
                         placeholder="Entrez votre nom"
-                        value={form.name}
-                        onChange={(event) => update('name', event.target.value)}
+                        value={data.name}
+                        onChange={(event) => setData('name', event.target.value)}
                         error={errors.name}
                         inputRef={nameRef}
                     />
@@ -208,8 +162,8 @@ function ContactForm() {
                         type="email"
                         label="Adresse e-mail"
                         placeholder="Entrez une adresse e-mail valide"
-                        value={form.email}
-                        onChange={(event) => update('email', event.target.value)}
+                        value={data.email}
+                        onChange={(event) => setData('email', event.target.value)}
                         error={errors.email}
                         inputRef={emailRef}
                     />
@@ -217,8 +171,8 @@ function ContactForm() {
                         id="contact-subject"
                         label="Objet"
                         placeholder="Objet de votre demande"
-                        value={form.subject}
-                        onChange={(event) => update('subject', event.target.value)}
+                        value={data.subject}
+                        onChange={(event) => setData('subject', event.target.value)}
                         error={errors.subject}
                         inputRef={subjectRef}
                     />
@@ -229,8 +183,8 @@ function ContactForm() {
                             id="contact-message"
                             ref={messageRef}
                             rows={6}
-                            value={form.message}
-                            onChange={(event) => update('message', event.target.value)}
+                            value={data.message}
+                            onChange={(event) => setData('message', event.target.value)}
                             placeholder="Décrivez votre demande : marchandise, origine, destination, volume et échéance…"
                             aria-invalid={Boolean(errors.message)}
                             aria-describedby={errors.message ? 'contact-message-error' : undefined}
@@ -243,10 +197,11 @@ function ContactForm() {
 
                 <button
                     type="submit"
-                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px]"
+                    disabled={processing}
+                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] disabled:opacity-60"
                     style={{ backgroundColor: COLORS.rouge, outlineColor: COLORS.marine, fontFamily: FONT_BODY }}
                 >
-                    Envoyer le message
+                    {processing ? 'Envoi en cours…' : 'Envoyer le message'}
                     <ContactIcon name="send" className="h-4 w-4" />
                 </button>
 
