@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactFormSubmitted;
 use App\Models\Contact;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,6 +31,15 @@ class ContactController extends Controller
         ]);
 
         $contact = Contact::create($validated);
+
+        try {
+            Mail::to('admin@keynisgroup.ci')->send(new ContactFormSubmitted($contact));
+        } catch (\Throwable $e) {
+            Log::error('Échec de l\'envoi du mail de notification de contact', [
+                'contact_id' => $contact->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         session()->flash('contact_submission_id', $contact->id);
         session()->flash('contact_submission', [
