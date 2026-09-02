@@ -89,10 +89,11 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                     <div className="max-w-2xl">
                         <p className="text-sm font-bold uppercase tracking-widest text-keynis-red">Location de véhicules</p>
                         <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
-                            Berline, 4x4, pick-up : trouvez ou proposez un véhicule pour vos missions
+                            {/* Berline, 4x4, pick-up : trouvez ou proposez un véhicule pour vos missions */}
+                            Référencement et location d'actifs : véhicules, engins BTP, machines agricoles et infrastructures.
                         </h2>
                         <p className="mt-4 text-slate-300">
-                            Keynis référence des propriétaires de véhicules pour les missions professionnelles,
+                            Keynis référence des propriétaires de véhicules, d'engins BTP, de machines agricoles et d'infrastructures pour les missions professionnelles,
                             logistiques, le transport, le terrain et les opérations spéciales avec ou sans chauffeur.
                         </p>
                     </div>
@@ -101,13 +102,13 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                             href="/actifs?tab=recherche&family=vehicules"
                             className="rounded-full bg-keynis-red px-6 py-3 text-sm font-bold text-white transition hover:bg-keynis-red-dark hover:scale-[1.03] active:scale-95"
                         >
-                            Demander un véhicule
+                            Demander un véhicule / engin
                         </Link>
                         <Link
                             href="/actifs?tab=propose&family=vehicules"
                             className="rounded-full bg-white px-6 py-3 text-sm font-bold text-keynis-navy transition hover:bg-slate-100 hover:scale-[1.03] active:scale-95"
                         >
-                            Proposer un véhicule
+                            Proposer un véhicule / engin
                         </Link>
                     </div>
                 </Reveal>
