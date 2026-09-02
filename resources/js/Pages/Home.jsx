@@ -183,7 +183,7 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                             {featuredProducts.map((p, i) => (
                                 <Reveal key={p.id} index={i}>
                                     <Link
-                                        href={`/rfq?type=recherche_actif&subject=${encodeURIComponent(p.name)}`}
+                                        href={`/actifs/${p.id}`}
                                         className="block h-full overflow-hidden rounded-2xl bg-white transition hover:shadow-lg"
                                     >
                                         <div className="aspect-[4/3] w-full overflow-hidden bg-keynis-navy/5">

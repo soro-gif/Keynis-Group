@@ -109,27 +109,24 @@ export default function ProductsIndex({ products, categories, filters, relatedAs
                                 <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                     {relatedAssets.map((asset, i) => (
                                         <Reveal key={asset.id} index={i} className="overflow-hidden rounded-2xl border border-slate-200">
-                                            <div className="aspect-[4/3] w-full bg-keynis-gray">
-                                                {firstImage(asset.photos) ? (
-                                                    <img src={firstImage(asset.photos)} alt={asset.name} className="h-full w-full object-cover" />
-                                                ) : (
-                                                    <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">Pas de photo</div>
-                                                )}
-                                            </div>
-                                            <div className="p-6">
-                                                {asset.category && (
-                                                    <p className="text-xs font-bold uppercase tracking-wide text-keynis-red">{asset.category.name}</p>
-                                                )}
-                                                <h3 className="mt-2 text-lg font-bold text-keynis-navy">{asset.name}</h3>
-                                                {asset.brand && <p className="text-sm text-slate-500">{asset.brand} {asset.model}</p>}
-                                                {asset.location && <p className="mt-1 text-sm text-slate-500">📍 {asset.location}</p>}
-                                                <Link
-                                                    href={`/rfq?type=recherche_actif&subject=${encodeURIComponent(asset.name)}`}
-                                                    className="mt-4 inline-block text-sm font-bold text-keynis-red hover:underline"
-                                                >
-                                                    Demander cet actif →
-                                                </Link>
-                                            </div>
+                                            <Link href={`/actifs/${asset.id}`} className="block h-full transition hover:border-keynis-red hover:shadow-lg">
+                                                <div className="aspect-[4/3] w-full bg-keynis-gray">
+                                                    {firstImage(asset.photos) ? (
+                                                        <img src={firstImage(asset.photos)} alt={asset.name} className="h-full w-full object-cover" />
+                                                    ) : (
+                                                        <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">Pas de photo</div>
+                                                    )}
+                                                </div>
+                                                <div className="p-6">
+                                                    {asset.category && (
+                                                        <p className="text-xs font-bold uppercase tracking-wide text-keynis-red">{asset.category.name}</p>
+                                                    )}
+                                                    <h3 className="mt-2 text-lg font-bold text-keynis-navy">{asset.name}</h3>
+                                                    {asset.brand && <p className="text-sm text-slate-500">{asset.brand} {asset.model}</p>}
+                                                    {asset.location && <p className="mt-1 text-sm text-slate-500">📍 {asset.location}</p>}
+                                                    <span className="mt-4 inline-block text-sm font-bold text-keynis-red">Voir les détails →</span>
+                                                </div>
+                                            </Link>
                                         </Reveal>
                                     ))}
                                 </div>

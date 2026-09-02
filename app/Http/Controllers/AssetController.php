@@ -39,6 +39,25 @@ class AssetController extends Controller
         ]);
     }
 
+    public function show(Asset $asset): Response
+    {
+        abort_unless($asset->listing_type === 'propose' && $asset->status === 'publie', 404);
+
+        $asset->load('category:id,name,slug,family');
+
+        $related = Asset::where('listing_type', 'propose')
+            ->where('status', 'publie')
+            ->where('category_id', $asset->category_id)
+            ->where('id', '!=', $asset->id)
+            ->limit(4)
+            ->get(['id', 'name', 'brand', 'model', 'photos']);
+
+        return Inertia::render('Assets/Show', [
+            'asset' => $asset,
+            'related' => $related,
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([

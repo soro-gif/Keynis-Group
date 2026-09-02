@@ -29,6 +29,7 @@ Route::get('/actifs', [AssetController::class, 'index'])->name('assets.index');
 Route::post('/actifs', [AssetController::class, 'store'])->name('assets.store')->middleware('throttle:10,1');
 Route::get('/actifs/confirmation', [AssetController::class, 'confirmation'])->name('assets.confirmation');
 Route::post('/actifs/confirmation/confirm', [AssetController::class, 'confirm'])->name('assets.confirmation.confirm')->middleware('throttle:10,1');
+Route::get('/actifs/{asset}', [AssetController::class, 'show'])->name('assets.show');
 
 Route::get('/partenaires', [PartnerController::class, 'index'])->name('partners.index');
 Route::post('/partenaires', [PartnerController::class, 'store'])->name('partners.store')->middleware('throttle:10,1');
