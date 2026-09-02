@@ -16,8 +16,8 @@ class HomeController extends Controller
             'categories' => ProductCategory::whereNull('parent_id')
                 ->orderBy('order')
                 ->get(['id', 'name', 'slug', 'sector', 'icon']),
-            'featuredProducts' => Product::where('is_featured', true)
-                ->orWhere('status', 'disponible')
+            'featuredProducts' => Product::whereHas('category', fn ($q) => $q->where('slug', 'equipements-machines'))
+                ->orderByDesc('is_featured')
                 ->latest()
                 ->limit(6)
                 ->get(['id', 'name', 'slug', 'type', 'origin', 'images']),
