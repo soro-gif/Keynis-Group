@@ -183,13 +183,13 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                             {featuredProducts.map((p, i) => (
                                 <Reveal key={p.id} index={i}>
                                     <Link
-                                        href={p.type === 'commodity' ? '/commodities' : `/produits/${p.slug}`}
+                                        href={`/rfq?type=recherche_actif&subject=${encodeURIComponent(p.name)}`}
                                         className="block h-full overflow-hidden rounded-2xl bg-white transition hover:shadow-lg"
                                     >
                                         <div className="aspect-[4/3] w-full overflow-hidden bg-keynis-navy/5">
-                                            {firstImage(p.images) ? (
+                                            {firstImage(p.photos) ? (
                                                 <motion.img
-                                                    src={firstImage(p.images)}
+                                                    src={firstImage(p.photos)}
                                                     alt={p.name}
                                                     whileHover={{ scale: 1.08 }}
                                                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -201,7 +201,9 @@ export default function Home({ categories = [], featuredProducts = [], latestArt
                                         </div>
                                         <div className="p-5">
                                             <h3 className="font-bold text-keynis-navy">{p.name}</h3>
-                                            {p.origin && <p className="mt-1 text-sm text-slate-500">{p.origin}</p>}
+                                            {(p.brand || p.model) && (
+                                                <p className="mt-1 text-sm text-slate-500">{[p.brand, p.model].filter(Boolean).join(' ')}</p>
+                                            )}
                                         </div>
                                     </Link>
                                 </Reveal>
