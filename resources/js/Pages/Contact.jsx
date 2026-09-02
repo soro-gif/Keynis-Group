@@ -4,7 +4,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { BrandFonts, BrandStyles } from '@/Components/Site/Brand';
 import { COLORS, FONT_BODY, FONT_TITLE } from '@/lib/brand';
 
-const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Angr%C3%A9+Les+Oscars%2C+Cocody%2C+Abidjan%2C+C%C3%B4te+d%27Ivoire';
+const MAPS_URL = 'https://maps.app.goo.gl/EBVS3c2AgTVtn1RW8';
 
 const CONTACT_DETAILS = [
     {
