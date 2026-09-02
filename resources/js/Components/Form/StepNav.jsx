@@ -1,6 +1,6 @@
 export default function StepNav({ step, isLast, onBack, processing, submitLabel, nextDisabled }) {
     return (
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex flex-col-reverse items-stretch gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
             {step > 0 ? (
                 <button
                     type="button"
@@ -9,7 +9,7 @@ export default function StepNav({ step, isLast, onBack, processing, submitLabel,
                 >
                     ← Précédent
                 </button>
-            ) : <span />}
+            ) : <span className="hidden sm:block" />}
             <button
                 type="submit"
                 disabled={processing || nextDisabled}

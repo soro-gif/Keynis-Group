@@ -15,15 +15,15 @@ export default function ImageField({ label = 'Image', existingImages, value, onC
 
     return (
         <Field label={label} error={error}>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                 {currentUrl ? (
-                    <img src={currentUrl} alt="" className="h-20 w-20 rounded-lg border border-slate-200 object-cover" />
+                    <img src={currentUrl} alt="" className="h-20 w-20 shrink-0 rounded-lg border border-slate-200 object-cover" />
                 ) : (
-                    <div className="flex h-20 w-20 items-center justify-center rounded-lg border border-dashed border-slate-300 text-xs text-slate-400">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-300 text-xs text-slate-400">
                         Aucune
                     </div>
                 )}
-                <input type="file" accept="image/*" onChange={handleChange} className="input" />
+                <input type="file" accept="image/*" onChange={handleChange} className="input min-w-0" />
             </div>
         </Field>
     );

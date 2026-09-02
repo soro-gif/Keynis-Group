@@ -276,7 +276,7 @@ function ProposeAssetForm({ categories, initialFamily }) {
             {stepTitle === 'Propriétaire' && (
                 <>
                     <h3 className="text-sm font-bold uppercase tracking-wide text-keynis-navy">Informations sur le propriétaire</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Field label="Nom & Prénoms / Raison sociale" required error={errors.owner_name}>
                             <input
                                 value={data.owner_name}
@@ -399,7 +399,7 @@ function ProposeAssetForm({ categories, initialFamily }) {
                     </Field>
 
                     {!isVehicle && (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Field label="Marque" error={errors.brand}>
                                 <input value={data.brand} onChange={(e) => setData('brand', e.target.value)} placeholder="Ex : Caterpillar" className="input" />
                             </Field>
@@ -433,7 +433,7 @@ function ProposeAssetForm({ categories, initialFamily }) {
                         )}
                     </Field>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Field label="Marque" required error={errors.brand}>
                             <input value={data.brand} onChange={(e) => setData('brand', e.target.value)} placeholder="Ex : Toyota" required className="input" />
                         </Field>
@@ -495,7 +495,7 @@ function ProposeAssetForm({ categories, initialFamily }) {
 
             {stepTitle === 'Détails' && (
                 <>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Field label="Localisation" error={errors.location}>
                             <input value={data.location} onChange={(e) => setData('location', e.target.value)} placeholder="Ex : Abidjan, Yopougon" className="input" />
                         </Field>
@@ -536,7 +536,7 @@ function ProposeAssetForm({ categories, initialFamily }) {
                         <PillSelect options={withDriverOptions} value={data.with_driver} onChange={(v) => setData('with_driver', v)} />
                     </Field>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Field label="Montant / jour (FCFA)" error={errors.price_per_day}>
                             <input value={data.price_per_day} onChange={(e) => setData('price_per_day', e.target.value)} placeholder="Ex : 75 000" className="input" />
                         </Field>
