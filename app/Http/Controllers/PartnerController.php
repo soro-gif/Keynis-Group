@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PartnerConfirmed;
 use App\Models\Partner;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -107,6 +110,15 @@ class PartnerController extends Controller
 
         if ($partner && ! $partner->confirmed_at) {
             $partner->update(['confirmed_at' => now()]);
+
+            try {
+                Mail::to('admin@keynisgroup.ci')->send(new PartnerConfirmed($partner));
+            } catch (\Throwable $e) {
+                Log::error('Échec de l\'envoi du mail de confirmation partenaire', [
+                    'partner_id' => $partner->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         $submission['confirmed_at'] = $partner?->confirmed_at;

@@ -50,6 +50,14 @@ export default function RfqConfirmation({ submission }) {
                 </div>
 
                 <div className="rounded-2xl border border-slate-200 bg-white p-8 print:border-none print:p-0">
+                    <div className="mb-6 hidden items-center gap-3 border-b border-slate-100 pb-6 print:flex">
+                        <img src="/images/logo-keynis.png" alt="Keynis Trading & Logistics Group" className="h-14 w-auto" />
+                        <div>
+                            <p className="text-sm font-extrabold text-keynis-navy">Keynis Trading & Logistics Group</p>
+                            <p className="text-xs text-slate-500">Abidjan, Côte d'Ivoire · contact@keynisgroup.ci · +225 07 15 25 89 88</p>
+                        </div>
+                    </div>
+
                     <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
                         <div>
                             <p className="text-xs font-bold uppercase tracking-wide text-keynis-red">

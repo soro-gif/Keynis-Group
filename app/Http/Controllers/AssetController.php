@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AssetConfirmed;
 use App\Mail\VehicleAssetSubmitted;
 use App\Mail\VehicleRfqSubmitted;
 use App\Models\Asset;
@@ -303,6 +304,15 @@ class AssetController extends Controller
 
         if ($asset && ! $asset->confirmed_at) {
             $asset->update(['confirmed_at' => now()]);
+
+            try {
+                Mail::to('admin@keynisgroup.ci')->send(new AssetConfirmed($asset));
+            } catch (\Throwable $e) {
+                Log::error('Échec de l\'envoi du mail de confirmation actif', [
+                    'asset_id' => $asset->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         $submission['confirmed_at'] = $asset?->confirmed_at;

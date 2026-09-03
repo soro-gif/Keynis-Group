@@ -51,6 +51,18 @@ export default function ContactConfirmation({ submission }) {
                             </Link>
                         </div>
 
+                        <div className="mb-6 hidden items-center gap-3 pb-6 print:flex" style={{ borderBottom: `1px solid ${COLORS.filetClair}` }}>
+                            <img src="/images/logo-keynis.png" alt="Keynis Trading & Logistics Group" className="h-14 w-auto" />
+                            <div>
+                                <p className="text-sm font-semibold" style={{ fontFamily: FONT_TITLE, color: COLORS.encre }}>
+                                    Keynis Trading & Logistics Group
+                                </p>
+                                <p className="text-xs" style={{ color: COLORS.grisSecondaire, fontFamily: FONT_BODY }}>
+                                    Abidjan, Côte d'Ivoire · contact@keynisgroup.ci · +225 07 15 25 89 88
+                                </p>
+                            </div>
+                        </div>
+
                         <div className="hidden print:mb-6 print:block">
                             <h2 className="text-xl font-semibold" style={{ fontFamily: FONT_TITLE, color: COLORS.encre }}>
                                 {submission.reference}

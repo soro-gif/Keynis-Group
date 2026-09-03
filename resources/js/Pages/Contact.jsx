@@ -110,14 +110,10 @@ function ContactInformation() {
 }
 
 function ContactForm() {
-    const { component, props } = usePage();
-    const isRfq = component === 'Rfq/Create';
-    const flashSuccess = isRfq ? props.flash?.success : null;
+    const { props } = usePage();
+    const flashSuccess = props.flash?.success;
 
-    const { data, setData, post, processing, errors, reset } = useForm({
-        ...INITIAL_FORM,
-        origin: isRfq ? 'rfq' : 'contact',
-    });
+    const { data, setData, post, processing, errors, reset } = useForm(INITIAL_FORM);
     const nameRef = useRef(null);
     const emailRef = useRef(null);
     const subjectRef = useRef(null);

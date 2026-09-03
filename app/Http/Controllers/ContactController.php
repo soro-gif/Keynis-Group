@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactConfirmed;
 use App\Mail\ContactFormSubmitted;
 use App\Models\Contact;
 use Illuminate\Http\RedirectResponse;
@@ -47,10 +48,6 @@ class ContactController extends Controller
             ]);
         }
 
-        if ($request->input('origin') === 'rfq') {
-            return redirect()->route('rfq.create')->with('success', 'Message envoyé. Nous vous répondrons sous 24 h ouvrées.');
-        }
-
         session()->flash('contact_submission_id', $contact->id);
         session()->flash('contact_submission', [
             'reference' => 'CT-'.str_pad((string) $contact->id, 6, '0', STR_PAD_LEFT),
@@ -94,6 +91,15 @@ class ContactController extends Controller
 
         if ($contact && ! $contact->confirmed_at) {
             $contact->update(['confirmed_at' => now()]);
+
+            try {
+                Mail::to('admin@keynisgroup.ci')->send(new ContactConfirmed($contact));
+            } catch (\Throwable $e) {
+                Log::error('Échec de l\'envoi du mail de confirmation de contact', [
+                    'contact_id' => $contact->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         $submission['confirmed_at'] = $contact?->confirmed_at;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RfqConfirmed;
 use App\Mail\VehicleRfqSubmitted;
 use App\Models\Rfq;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +19,7 @@ class RfqController extends Controller
     {
         return Inertia::render('Rfq/Create', [
             'presetType' => $request->query('type'),
+            'presetSubject' => $request->query('subject'),
         ]);
     }
 
@@ -119,6 +121,15 @@ class RfqController extends Controller
 
         if ($rfq && ! $rfq->confirmed_at) {
             $rfq->update(['confirmed_at' => now()]);
+
+            try {
+                Mail::to('admin@keynisgroup.ci')->send(new RfqConfirmed($rfq));
+            } catch (\Throwable $e) {
+                Log::error('Échec de l\'envoi du mail de confirmation RFQ', [
+                    'rfq_id' => $rfq->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         $submission['confirmed_at'] = $rfq?->confirmed_at;

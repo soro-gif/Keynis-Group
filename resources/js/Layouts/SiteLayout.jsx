@@ -19,7 +19,8 @@ const navAfter = [
     { label: 'Produits & Marchés', href: '/produits' },
     { label: 'Partenaires', href: '/partenaires' },
     { label: 'Market Watch', href: '/market-watch' },
-    { label: 'Contact / RFQ', href: '/rfq' },
+    { label: 'RFQ', href: '/rfq' },
+    { label: 'Contact', href: '/contact' },
 ];
 
 const WHATSAPP_NUMBER = '+2250715258988';
