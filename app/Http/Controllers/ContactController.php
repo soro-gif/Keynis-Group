@@ -48,19 +48,9 @@ class ContactController extends Controller
             ]);
         }
 
-        session()->flash('contact_submission_id', $contact->id);
-        session()->flash('contact_submission', [
-            'reference' => 'CT-'.str_pad((string) $contact->id, 6, '0', STR_PAD_LEFT),
-            'name' => $contact->name,
-            'email' => $contact->email,
-            'phone' => $contact->phone,
-            'subject' => $contact->subject,
-            'message' => $contact->message,
-            'submitted_at' => $contact->created_at,
-            'confirmed_at' => null,
-        ]);
+        session()->flash('success', 'Votre message a bien été envoyé. Nous vous répondrons sous 24 h ouvrées.');
 
-        return redirect()->route('contact.confirmation');
+        return redirect()->route('contact');
     }
 
     public function confirmation(): Response|RedirectResponse

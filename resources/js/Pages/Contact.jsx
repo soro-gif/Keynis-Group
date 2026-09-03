@@ -156,16 +156,12 @@ function ContactForm() {
                 {flashSuccess && (
                     <div
                         role="status"
-                        className="mb-6 flex items-center gap-3 rounded-lg p-4"
-                        style={{ backgroundColor: COLORS.blanc, border: `1px solid ${COLORS.marine}` }}
+                        className="mb-6 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4"
                     >
-                        <span
-                            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-white"
-                            style={{ backgroundColor: COLORS.marine }}
-                        >
+                        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-white">
                             <ContactIcon name="check" className="h-4 w-4" />
                         </span>
-                        <p className="text-sm" style={{ color: COLORS.encre, fontFamily: FONT_BODY }}>
+                        <p className="text-sm text-green-700" style={{ fontFamily: FONT_BODY }}>
                             {flashSuccess}
                         </p>
                     </div>
