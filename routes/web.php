@@ -30,6 +30,8 @@ Route::post('/actifs', [AssetController::class, 'store'])->name('assets.store')-
 Route::get('/actifs/confirmation', [AssetController::class, 'confirmation'])->name('assets.confirmation');
 Route::post('/actifs/confirmation/confirm', [AssetController::class, 'confirm'])->name('assets.confirmation.confirm')->middleware('throttle:10,1');
 Route::get('/actifs/{asset}', [AssetController::class, 'show'])->name('assets.show');
+Route::get('/actifs/{asset}/demande', [AssetController::class, 'requestForm'])->name('assets.request');
+Route::post('/actifs/{asset}/demande', [AssetController::class, 'submitRequest'])->name('assets.request.store')->middleware('throttle:10,1');
 
 Route::get('/partenaires', [PartnerController::class, 'index'])->name('partners.index');
 Route::post('/partenaires', [PartnerController::class, 'store'])->name('partners.store')->middleware('throttle:10,1');

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\VehicleAssetSubmitted;
+use App\Mail\VehicleRfqSubmitted;
 use App\Models\Asset;
 use App\Models\AssetCategory;
+use App\Models\Rfq;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -56,6 +58,91 @@ class AssetController extends Controller
             'asset' => $asset,
             'related' => $related,
         ]);
+    }
+
+    public function requestForm(Asset $asset): Response
+    {
+        abort_unless($asset->listing_type === 'propose' && $asset->status === 'publie', 404);
+
+        $asset->load('category:id,name,slug,family');
+
+        return Inertia::render('Assets/Request', [
+            'asset' => $asset->only([
+                'id', 'name', 'brand', 'model', 'location',
+                'price_per_day', 'price_per_mission', 'indicative_price',
+            ]),
+        ]);
+    }
+
+    public function submitRequest(Asset $asset, Request $request): RedirectResponse
+    {
+        abort_unless($asset->listing_type === 'propose' && $asset->status === 'publie', 404);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:50', 'regex:/^[0-9+\-\s()]{6,20}$/'],
+            'whatsapp' => ['nullable', 'string', 'max:50', 'regex:/^[0-9+\-\s()]{6,20}$/'],
+            'email' => ['required', 'email', 'max:255'],
+            'start_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'duration' => ['nullable', 'string', 'max:255'],
+            'pickup_location' => ['nullable', 'string', 'max:255'],
+            'message' => ['nullable', 'string', 'max:5000'],
+        ], [
+            'phone.regex' => 'Le numéro de téléphone n\'est pas valide.',
+            'whatsapp.regex' => 'Le numéro WhatsApp n\'est pas valide.',
+            'start_date.after_or_equal' => 'La date souhaitée ne peut pas être une date passée.',
+        ]);
+
+        $asset->loadMissing('category:id,name,slug,family');
+
+        $rfq = Rfq::create([
+            'category' => 'demande',
+            'type' => 'recherche_actif',
+            'name' => $validated['name'],
+            'company' => $validated['company'] ?? null,
+            'phone' => $validated['phone'],
+            'whatsapp' => $validated['whatsapp'] ?? null,
+            'email' => $validated['email'],
+            'subject' => $asset->name,
+            'description' => $validated['message'] ?? null,
+            'quantity' => $validated['duration'] ?? null,
+            'deadline' => $validated['start_date'] ?? null,
+            'delivery_location' => $validated['pickup_location'] ?? null,
+            'details' => ['asset_id' => $asset->id],
+        ]);
+
+        if ($asset->category?->family === 'vehicules') {
+            try {
+                Mail::to('admin@keynisgroup.ci')->send(new VehicleRfqSubmitted($rfq));
+            } catch (\Throwable $e) {
+                Log::error('Échec de l\'envoi du mail de notification véhicule (demande actif)', [
+                    'rfq_id' => $rfq->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        session()->flash('rfq_submission_id', $rfq->id);
+        session()->flash('rfq_submission', [
+            'reference' => $rfq->reference,
+            'category' => $rfq->category,
+            'type' => $rfq->type,
+            'name' => $rfq->name,
+            'company' => $rfq->company,
+            'phone' => $rfq->phone,
+            'whatsapp' => $rfq->whatsapp,
+            'email' => $rfq->email,
+            'subject' => $rfq->subject,
+            'description' => $rfq->description,
+            'quantity' => $rfq->quantity,
+            'deadline' => $rfq->deadline?->toDateString(),
+            'delivery_location' => $rfq->delivery_location,
+            'submitted_at' => $rfq->created_at,
+            'confirmed_at' => null,
+        ]);
+
+        return redirect()->route('rfq.confirmation');
     }
 
     public function store(Request $request): RedirectResponse

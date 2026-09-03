@@ -105,7 +105,7 @@ export default function AssetShow({ asset, related }) {
                             <p className="mt-2 text-sm text-slate-600">Avec chauffeur : {asset.with_driver}</p>
                         )}
                         <Link
-                            href={`/rfq?type=recherche_actif&subject=${encodeURIComponent(asset.name)}`}
+                            href={`/actifs/${asset.id}/demande`}
                             className="mt-6 block rounded-full bg-keynis-red px-6 py-3 text-center text-sm font-bold text-white hover:bg-keynis-red-dark"
                         >
                             Demander cet actif
