@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AssetConfirmed;
+use App\Mail\AssetSubmitted;
+use App\Mail\RfqSubmitted;
 use App\Mail\VehicleAssetSubmitted;
 use App\Mail\VehicleRfqSubmitted;
 use App\Models\Asset;
@@ -113,15 +115,14 @@ class AssetController extends Controller
             'details' => ['asset_id' => $asset->id],
         ]);
 
-        if ($asset->category?->family === 'vehicules') {
-            try {
-                Mail::to('admin@keynisgroup.ci')->send(new VehicleRfqSubmitted($rfq));
-            } catch (\Throwable $e) {
-                Log::error('Échec de l\'envoi du mail de notification véhicule (demande actif)', [
-                    'rfq_id' => $rfq->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+        try {
+            $isVehicle = $asset->category?->family === 'vehicules';
+            Mail::to('admin@keynisgroup.ci')->send($isVehicle ? new VehicleRfqSubmitted($rfq) : new RfqSubmitted($rfq));
+        } catch (\Throwable $e) {
+            Log::error('Échec de l\'envoi du mail de notification (demande actif)', [
+                'rfq_id' => $rfq->id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         session()->flash('rfq_submission_id', $rfq->id);
@@ -215,15 +216,14 @@ class AssetController extends Controller
         $asset = Asset::create($validated);
         $asset->load('category');
 
-        if ($asset->category?->family === 'vehicules') {
-            try {
-                Mail::to('admin@keynisgroup.ci')->send(new VehicleAssetSubmitted($asset));
-            } catch (\Throwable $e) {
-                Log::error('Échec de l\'envoi du mail de notification véhicule (actif proposé)', [
-                    'asset_id' => $asset->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+        try {
+            $isVehicle = $asset->category?->family === 'vehicules';
+            Mail::to('admin@keynisgroup.ci')->send($isVehicle ? new VehicleAssetSubmitted($asset) : new AssetSubmitted($asset));
+        } catch (\Throwable $e) {
+            Log::error('Échec de l\'envoi du mail de notification (actif proposé)', [
+                'asset_id' => $asset->id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         session()->flash('asset_submission_id', $asset->id);

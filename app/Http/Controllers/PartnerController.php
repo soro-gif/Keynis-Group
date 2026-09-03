@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PartnerConfirmed;
+use App\Mail\PartnerSubmitted;
 use App\Models\Partner;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,6 +57,15 @@ class PartnerController extends Controller
         $validated['status'] = 'nouveau';
 
         $partner = Partner::create($validated);
+
+        try {
+            Mail::to('admin@keynisgroup.ci')->send(new PartnerSubmitted($partner));
+        } catch (\Throwable $e) {
+            Log::error('Échec de l\'envoi du mail de notification partenaire', [
+                'partner_id' => $partner->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         session()->flash('partner_submission_id', $partner->id);
         session()->flash('partner_submission', [

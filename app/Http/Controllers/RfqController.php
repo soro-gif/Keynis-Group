@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\RfqConfirmed;
+use App\Mail\RfqSubmitted;
 use App\Mail\VehicleRfqSubmitted;
 use App\Models\Rfq;
 use Illuminate\Http\RedirectResponse;
@@ -57,15 +58,13 @@ class RfqController extends Controller
         $isVehicleRequest = in_array($rfq->type, ['recherche_actif', 'offre_actif'], true)
             && Str::of($rfq->subject)->lower()->contains(['véhicule', 'vehicule']);
 
-        if ($isVehicleRequest) {
-            try {
-                Mail::to('admin@keynisgroup.ci')->send(new VehicleRfqSubmitted($rfq));
-            } catch (\Throwable $e) {
-                Log::error('Échec de l\'envoi du mail de notification véhicule (RFQ)', [
-                    'rfq_id' => $rfq->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+        try {
+            Mail::to('admin@keynisgroup.ci')->send($isVehicleRequest ? new VehicleRfqSubmitted($rfq) : new RfqSubmitted($rfq));
+        } catch (\Throwable $e) {
+            Log::error('Échec de l\'envoi du mail de notification RFQ', [
+                'rfq_id' => $rfq->id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         session()->flash('rfq_submission_id', $rfq->id);
