@@ -4,6 +4,10 @@ set -e
 cd /var/www/html
 
 echo "==> Keynis Group : démarrage"
+# Rappel : sur le plan gratuit Render, ce script est rejoué à chaque réveil de
+# l'instance (arrêt après ~15 min sans trafic). Chaque étape ci-dessous allonge
+# donc la page d'attente « Welcome to Render » vue par le visiteur : on garde
+# uniquement ce qui est indispensable.
 
 # 1. APP_KEY obligatoire et au format base64:<32 octets>, sinon Laravel plante
 #    en 500 dès la première requête (cipher AES-256-CBC invalide).
@@ -43,11 +47,21 @@ php artisan migrate --force --no-interaction
 
 php artisan cache:clear || true
 
-# 6. Seed optionnel : mets RUN_SEEDERS=true dans Render pour peupler la base.
-if [ "${RUN_SEEDERS}" = "true" ]; then
-    echo "==> Seeders"
-    php artisan db:seed --force --no-interaction || true
-fi
+# 6. Seed optionnel.
+#    - RUN_SEEDERS=auto (recommandé) : ne lance les seeders que si la base est
+#      vide. Sans ce garde-fou, ils étaient rejoués à chaque réveil de
+#      l'instance et allongeaient le démarrage à froid.
+#    - RUN_SEEDERS=true : force les seeders à chaque démarrage.
+case "${RUN_SEEDERS}" in
+    auto)
+        echo "==> Seeders (uniquement si la base est vide)"
+        php artisan keynis:seed-if-empty --no-interaction || true
+        ;;
+    true)
+        echo "==> Seeders (forcés)"
+        php artisan db:seed --force --no-interaction || true
+        ;;
+esac
 
 # 7. Lien symbolique storage -> public (images uploadées).
 php artisan storage:link || true

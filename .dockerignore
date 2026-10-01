@@ -6,3 +6,6 @@ vendor
 storage/logs/*
 npm-debug.log
 .DS_Store
+
+# Réveil de l'instance Render : déployé sur Cloudflare, inutile dans l'image.
+cloudflare-worker

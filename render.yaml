@@ -1,3 +1,14 @@
+# ---------------------------------------------------------------------------
+# POURQUOI LE SITE AFFICHE « WELCOME TO RENDER / SERVICE WAKING UP »
+# ---------------------------------------------------------------------------
+# Avec `plan: free`, Render arrête complètement le conteneur après ~15 min
+# sans aucune requête entrante. Le visiteur suivant paie le redémarrage à
+# froid (40 à 60 s) et voit la page d'attente de Render à la place du site.
+# La seule façon de supprimer cette page est de garder l'instance éveillée :
+#   - plan `starter` ci-dessous (aucune mise en veille, ~7 $/mois), ou
+#   - un « réveil » externe toutes les 5-10 min (voir cloudflare-worker/ et
+#     .github/workflows/keep-alive.yml).
+# ---------------------------------------------------------------------------
 databases:
   - name: keynis-db
     databaseName: keynis
@@ -28,7 +39,7 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
-        value: debug
+        value: warning
       - key: SESSION_DRIVER
         value: database
       - key: CACHE_STORE
@@ -38,7 +49,9 @@ services:
       - key: PHP_CLI_SERVER_WORKERS
         value: "4"
       - key: RUN_SEEDERS
-        value: "true"
+        value: "auto"    # "auto" = les seeders ne tournent que si la base est vide.
+                          # Avec "true", ils étaient rejoués à CHAQUE réveil de l'instance,
+                          # ce qui allongeait inutilement le démarrage à froid.
       - key: ADMIN_PASSWORD
         sync: false      # optionnel : si défini, (ré)initialise le mot de passe de
                           # admin@keynisgroup.ci à chaque déploiement (utile sans accès Shell)

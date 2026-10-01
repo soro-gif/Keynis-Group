@@ -1,0 +1,19 @@
+name = "keynis-keep-alive"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# Réveil toutes les 5 minutes, de 05:00 à 22:55 UTC (GMT = heure d'Abidjan).
+#
+# Pourquoi une plage horaire et pas 24 h/24 : un service gratuit éveillé en
+# permanence consomme 744 h sur les 750 h d'instance gratuites du mois (31 j),
+# et Render SUSPEND tous les services gratuits du workspace jusqu'au mois
+# suivant dès que le quota est dépassé. Une panne de plusieurs jours serait
+# bien pire qu'une page d'attente. 18 h/jour = 558 h/mois, soit 192 h de marge.
+# Pour couvrir 24 h/24 : crons = ["*/5 * * * *"] — déconseillé sans ajouter
+# de marge (quota consommé à 99 %).
+[triggers]
+crons = ["*/5 5-22 * * *"]
+
+[vars]
+# Origine Render directe : on réveille le conteneur sans passer par Cloudflare.
+ORIGIN_URL = "https://keynis-group-xu0n.onrender.com/up"

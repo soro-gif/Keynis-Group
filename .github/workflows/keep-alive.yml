@@ -1,14 +1,68 @@
 name: Keep Render service awake
 
+# ---------------------------------------------------------------------------
+# ⚠️ Filet de sécurité, pas la solution principale.
+#
+# Render (plan free) arrête le conteneur après ~15 min sans requête : le
+# visiteur suivant voit la page « Welcome to Render » pendant ~40-60 s.
+#
+# Ce workflow est censé empêcher cela, mais GitHub bride fortement les
+# workflows planifiés sur un dépôt peu actif. Mesuré sur ce dépôt :
+# `*/10 * * * *` (144 exécutions/jour attendues) n'a tourné que ~5 fois par
+# jour, avec des trous de 2 h à 7 h — le service se rendormait donc entre
+# deux passages.
+#
+# Deux conséquences dans ce fichier :
+#   1. le réveil ne doit JAMAIS faire échouer le job (un job rouge ne réveille
+#      rien) : on tire la requête, puis on vérifie ;
+#   2. le réveil réellement fiable est assuré par cloudflare-worker/, dont le
+#      cron Cloudflare tourne toutes les 5 min sans bride.
+#
+# Alternative définitive : passer le service web en `plan: starter` dans
+# render.yaml — plus aucune mise en veille, donc plus aucune page d'attente.
+# ---------------------------------------------------------------------------
+
 on:
   schedule:
-    # Every 10 minutes. Render's free plan sleeps after ~15 min of inactivity.
-    - cron: "*/10 * * * *"
-  workflow_dispatch: {}
+    # 05:00–22:55 UTC uniquement : Render n'accorde que 750 h d'instance
+    # gratuites par mois et suspend tous les services gratuits du workspace
+    # en cas de dépassement (voir cloudflare-worker/README.md).
+    - cron: "*/10 5-22 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: keep-alive
+  cancel-in-progress: false
+
+env:
+  # Origine Render directe : on réveille le conteneur sans passer par
+  # Cloudflare, qui pourrait répondre depuis son cache sans toucher l'origine.
+  ORIGIN_URL: https://keynis-group-xu0n.onrender.com/up
 
 jobs:
   ping:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - name: Ping health check endpoint
-        run: curl -fsS --max-time 60 https://keynis-group-xu0n.onrender.com/up
+      - name: Réveiller le service (le démarrage à froid dépasse 60 s)
+        # `-f` est volontairement absent : le timeout précédent de 60 s
+        # faisait échouer le job avant la fin du démarrage. Ici on laisse
+        # jusqu'à 4 min, et même si le client abandonne, Render a déjà reçu la
+        # requête et démarre le conteneur.
+        run: |
+          curl -sS -o /dev/null -w 'wake: http=%{http_code} total=%{time_total}s\n' \
+            --max-time 240 "$ORIGIN_URL" || true
+
+      - name: Vérifier que le site répond
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 45 "$ORIGIN_URL" || echo 000)
+            echo "essai ${attempt} -> HTTP ${code}"
+            if [ "$code" = "200" ]; then
+              echo "Le service est réveillé."
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Le service n'a pas répondu 200 après réveil." >&2
+          exit 1
