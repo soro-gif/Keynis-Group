@@ -191,6 +191,6 @@ curl -s -o /dev/null -w '%{time_starttransfer}s\n' https://www.keynisgroup.ci/
 php artisan test
 ```
 
-Dans le tableau de bord Render, l'onglet **Syns** doit repasser au vert, et
+Dans le tableau de bord Render, l'onglet **Syncs** doit repasser au vert, et
 l'onglet **Logs** du service doit montrer une requête sur `/up` toutes les
 5 minutes pendant la plage couverte.
