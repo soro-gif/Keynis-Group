@@ -56,6 +56,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Release
+    |--------------------------------------------------------------------------
+    |
+    | Identifiant du commit déployé, exposé sur chaque réponse HTTP via
+    | l'en-tête "X-Release" : permet de vérifier quelle révision est réellement
+    | en ligne. RENDER_GIT_COMMIT est fourni automatiquement par Render et vaut
+    | null en local, où l'en-tête n'est donc pas envoyé.
+    |
+    */
+
+    'release' => env('RENDER_GIT_COMMIT')
+        ? substr((string) env('RENDER_GIT_COMMIT'), 0, 7)
+        : null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

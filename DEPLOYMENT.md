@@ -4,8 +4,8 @@
 
 | Élément | Où | Plan |
 |---|---|---|
-| Application (Laravel 13 + Inertia/React) | Render, service web Docker | free |
-| Base de données | Render Postgres | free |
+| Application (Laravel 13 + Inertia/React) | Render, service web Docker | free (mise en veille) |
+| Base de données | Render Postgres | `0.1c-256mb` (payant) |
 | DNS + proxy | Cloudflare (`keynisgroup.ci`) | free |
 | Réveil de l'instance | Worker Cloudflare (`cloudflare-worker/`) | free |
 
@@ -13,10 +13,27 @@ Domaine public : <https://www.keynisgroup.ci> ➜ `https://keynis-group-xu0n.onr
 
 ---
 
-## Pourquoi le site affiche « WELCOME TO RENDER »
+## Deux problèmes distincts sur le site
 
-C'est le symptôme le plus visible du site. Il n'a rien à voir avec
-l'application : la page vient de Render, pas du code.
+### 1. Plus aucun déploiement ne pouvait passer (sync Blueprint en échec)
+
+Le Blueprint `Keynisgroup_blueprint` échouait à chaque synchronisation :
+
+> There was a problem syncing with your Blueprint:
+> `databases[0].plan` **cannot downgrade database from 0.1c-256mb to Free**
+
+Cause : `render.yaml` déclarait `plan: free` pour la base, alors que celle-ci
+tourne en réalité sur le plan payant `0.1c-256mb` (l'équivalent payant du plan
+free : 0,1 CPU / 256 Mo). Render refuse toute rétrogradation, donc **chaque
+synchronisation était annulée** — et une synchronisation annulée ne déploie
+rien : ni le nouveau code, ni les variables d'environnement du Blueprint.
+
+Correctif : le champ `plan` de la base est **omis** dans `render.yaml`. La
+référence Blueprint précise que dans ce cas Render *conserve* le plan actuel :
+plus aucune rétrogradation possible, donc plus aucun blocage. Voir
+<https://render.com/docs/blueprint-spec#database-fields>.
+
+### 2. Le site affiche « WELCOME TO RENDER » avant de s'ouvrir
 
 **Ce qui se passe réellement**
 
@@ -55,7 +72,17 @@ Résultat : l'instance était en veille pour la quasi-totalité des visiteurs.
 
 ## Correctifs appliqués
 
-### 1. Réveil fiable — Worker Cloudflare (`cloudflare-worker/`)
+### 1. Débloquer les déploiements (`render.yaml`)
+
+- `databases[0].plan` retiré (voir problème n°1 ci-dessus).
+- `APP_ENV` : `local` ➜ **`production`** et `APP_URL` : `127.00.1:10000` ➜
+  **`https://www.keynisgroup.ci`**. Ces deux valeurs avaient été dégradées
+  localement sans être commitées. `APP_URL` invalide ne se voyait pas depuis le
+  navigateur (Laravel reconstruit l'URL à partir de la requête) mais faussait
+  les URL générées hors requête : e-mails, file d'attente, tâches planifiées.
+- `LOG_LEVEL` : `debug` ➜ `warning` (moins d'écritures au démarrage).
+
+### 2. Réveil fiable — Worker Cloudflare (`cloudflare-worker/`)
 
 Cron **toutes les 5 minutes** (plage 05:00–22:55 UTC) qui appelle `/up` sur
 l'origine Render. Cloudflare n'applique pas la bride de GitHub, et le domaine
@@ -69,31 +96,23 @@ npx wrangler deploy
 
 Voir `cloudflare-worker/README.md` (déploiement, vérification, quota).
 
-### 2. Démarrage à froid raccourci
+### 3. Démarrage à froid raccourci
 
-- `RUN_SEEDERS` passe de `true` à **`auto`** : les seeders ne tournent plus à
-  chaque réveil mais uniquement si la base est vide
-  (`php artisan keynis:seed-if-empty`, `app/Console/Commands/SeedIfEmpty.php`).
-- `LOG_LEVEL` passe de `debug` à `warning` (moins d'écritures au démarrage).
-
-### 3. Configuration de production restaurée (`render.yaml`)
-
-Le fichier local avait été modifié et n'était pas commité :
-
-| Variable | Valeur cassée | Valeur corrigée |
-|---|---|---|
-| `APP_ENV` | `local` | `production` |
-| `APP_URL` | `127.00.1:10000` (URL invalide) | `https://www.keynisgroup.ci` |
-
-`APP_URL` invalide ne se voyait pas depuis le navigateur (Laravel reconstruit
-l'URL à partir de la requête), mais faussait les URL générées hors requête :
-e-mails, liens en file d'attente, tâches planifiées.
+`RUN_SEEDERS` passe de `true` à **`auto`** : les seeders ne tournent plus à
+chaque réveil mais uniquement si la base est vide
+(`php artisan keynis:seed-if-empty`, `app/Console/Commands/SeedIfEmpty.php`).
 
 ### 4. Workflow GitHub réparé (filet de sécurité)
 
 `keep-alive.yml` ne fait plus échouer le job lorsqu'un réveil est lent
 (`--max-time 240`, puis vérification HTTP 200 avec reprises). Il reste un filet
 de sécurité : sa cadence dépend de GitHub.
+
+### 5. En-tête `X-Release`
+
+Chaque réponse HTTP porte le commit réellement déployé
+(`RENDER_GIT_COMMIT` fourni par Render, via `config('app.release')`). Absent en
+local. C'est ce qui permet de vérifier qu'une révision est bien en ligne.
 
 ---
 
@@ -112,35 +131,24 @@ UTC, un visiteur peut encore voir la page d'attente de Render.
 
 Suivre la consommation : **Render Dashboard → Billing → Monthly Included Usage**.
 
-**La solution sans compromis** : passer le service web en `plan: starter`
-dans `render.yaml` (~7 $/mois). Plus de mise en veille, plus besoin de réveil.
+**La solution sans compromis** : passer le service web en `plan: starter` dans
+`render.yaml` (~7 $/mois). Le site ne se mettrait plus jamais en veille, et le
+Worker de réveil deviendrait inutile. La base étant déjà sur un plan payant,
+c'est le seul plan gratuit restant sur ce projet.
 
-### Le Postgres gratuit expire après 30 jours
+### Base de données
 
-> Free Render Postgres databases expire 30 days after creation. […] After a free
-> database expires, you have a grace period of 14 days […] After the grace
-> period, Render **deletes the database (along with all of its data)**.
+La base `keynis-db` tourne sur le plan payant **`0.1c-256mb`** : elle n'est donc
+**pas** soumise à l'expiration de 30 jours des bases gratuites de Render.
 
-Contrairement au service web, la base **ne se réveille pas** : à l'expiration
-elle devient inaccessible, puis est supprimée définitivement, avec tout le
-contenu du site (produits, actifs, partenaires, demandes, comptes).
+Deux points à garder en tête :
 
-**À vérifier maintenant** : Render Dashboard → la base `keynis-db` → **Info** →
-date de création et date d'expiration.
+- **Aucun backup automatique** n'est configuré (les sauvegardes gérées sont
+  réservées aux plans Postgres supérieurs). Pour une sauvegarde ponctuelle :
+  `pg_dump` depuis un poste local avec les identifiants de la base.
+- La limite de stockage de ce plan est de 15 Go par défaut.
 
-Options :
-
-1. la passer sur un plan payant avant l'expiration ;
-2. la recréer et relancer `migrate` + seeders (les données métier saisies depuis
-   sont perdues) ;
-3. migrer vers un Postgres gratuit sans expiration (Neon, Supabase) en changeant
-   `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` sur Render
-   — conserver `DB_SSLMODE=require`.
-
-Aucune sauvegarde n'est possible sur une base gratuite : **aucun backup** n'est
-disponible. Option 3 recommandée pour la production.
-
-### Autres limites du plan gratuit
+### Autres limites du plan gratuit du service web
 
 - Le disque est éphémère : les images envoyées doivent aller sur un stockage
   externe (R2/S3 via `AWS_BUCKET`), sinon elles disparaissent à chaque
@@ -154,8 +162,9 @@ disponible. Option 3 recommandée pour la production.
 
 ## Variables d'environnement à définir dans Render
 
-Ces valeurs sont en `sync: false` dans `render.yaml` : à saisir une fois dans
-**Render Dashboard → keynis-group → Environment**.
+Ces valeurs sont en `sync: false` dans `render.yaml` : Render **ignore** les
+variables `sync: false` lors de la mise à jour d'un Blueprint existant. Elles se
+saisissent une fois dans **Render Dashboard → keynis-group → Environment**.
 
 | Variable | Rôle |
 |---|---|
@@ -172,12 +181,16 @@ Ces valeurs sont en `sync: false` dans `render.yaml` : à saisir une fois dans
 # Le service répond
 curl -s -o /dev/null -w '%{http_code}\n' https://www.keynisgroup.ci/up      # 200
 
-# Aucune page d'attente Render pendant la plage couverte (mesurer le TTFB)
+# Révision réellement en ligne (doit correspondre au dernier commit de main)
+curl -sI https://www.keynisgroup.ci/ | findstr /I "x-release"
+
+# Pas de page d'attente Render pendant la plage couverte (temps de réponse)
 curl -s -o /dev/null -w '%{time_starttransfer}s\n' https://www.keynisgroup.ci/
 
 # Tests applicatifs
 php artisan test
 ```
 
-Dans le tableau de bord Render, l'onglet **Logs** du service doit montrer une
-requête sur `/up` toutes les 5 minutes pendant la plage couverte.
+Dans le tableau de bord Render, l'onglet **Syns** doit repasser au vert, et
+l'onglet **Logs** du service doit montrer une requête sur `/up` toutes les
+5 minutes pendant la plage couverte.

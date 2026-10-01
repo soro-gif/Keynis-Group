@@ -13,7 +13,16 @@ databases:
   - name: keynis-db
     databaseName: keynis
     user: keynis
-    plan: free
+    # `plan` est volontairement OMIS.
+    # Cette base tourne en réalité sur le plan payant `0.1c-256mb` (donc sans
+    # expiration au bout de 30 jours), alors que ce fichier déclarait `free`.
+    # Render refusait alors CHAQUE synchronisation :
+    #   « databases[0].plan cannot downgrade database from 0.1c-256mb to Free »
+    # ...donc plus aucun déploiement ne pouvait passer, et les variables
+    # d'environnement ci-dessous n'étaient plus appliquées.
+    # D'après la référence Blueprint, omettre le champ fait conserver le plan
+    # actuel par Render — ce qui ne peut jamais provoquer de « downgrade ».
+    # Référence : https://render.com/docs/blueprint-spec#database-fields
 
 services:
   - type: web

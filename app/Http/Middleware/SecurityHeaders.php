@@ -26,6 +26,14 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
+        // Commit réellement déployé (fourni par Render), pour identifier la
+        // révision en ligne sans passer par le tableau de bord. Absent en local.
+        $release = config('app.release');
+
+        if ($release) {
+            $response->headers->set('X-Release', (string) $release);
+        }
+
         return $response;
     }
 }
